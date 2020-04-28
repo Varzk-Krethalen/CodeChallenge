@@ -1,2 +1,6 @@
 language: csharp
 solution: UserClient/CodeChallengeClients.sln
+
+mono: none
+dist: xenial
+dotnet: 4.7.2
