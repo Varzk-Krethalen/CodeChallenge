@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController @RequestMapping("/user")
+import javax.transaction.Transactional;
+
+@RestController @RequestMapping("/user") @Transactional
 public class UserHandler {
 
     @Autowired
@@ -23,7 +25,7 @@ public class UserHandler {
 //        challenge.setInitialCode("throw new exception(blah)");
 //        accessor.saveEntity(challenge);
         var c = accessor.getAllEntities().get(0);
-        c.setName("three!");
+        c.setName("four!");
         //accessor.saveEntity(challenge);
         return null;
     }

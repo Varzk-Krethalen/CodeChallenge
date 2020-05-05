@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service @Transactional
 public class JPADataAccessor<T> {
     @Autowired
     private GenericRepository<T> dataRepository;
