@@ -1,0 +1,10 @@
+USED:
+
+	
+	SPRING:
+		Spring site tutorials
+
+		CRUD:
+			https://stackoverflow.com/questions/19417670/using-generics-in-spring-data-jpa-repositories
+		
+		
