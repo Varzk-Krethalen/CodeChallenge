@@ -1,21 +1,18 @@
 package com.ashafee.ccserver.user;
 
-import com.ashafee.ccserver.challenge.Language;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-@Data
+@Entity @Data @NoArgsConstructor
 public class User {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private final Integer userID;
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    private long userID;
     private String username;
     private String password;
     private UserType userType;
-//    private Ranking ranking? or int?
 }

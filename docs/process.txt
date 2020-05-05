@@ -1,0 +1,21 @@
+PROCESS:
+
+Server:
+
+	Add database interface & mysql implementation
+	Create basic initial database
+	Create interfaces - User, Challenge, CodeValidator, ValidityTest
+	Create objects - AdminUser, RestrictedUser, JavaChallenge, JavaCodeValidator, ValidityTestCategory, ValidityTestSingle
+	Error handling / 404s and stuff
+	Testlist and initial tests
+	Test retrieving challenge
+	
+	error catching!
+	
+	
+Notes:
+	ValidityTest can be a set of ValidityTests - i.e. choose from a set of tests in that testing category
+	Assume authentication will be checked before allowing the user/challenge mappings
+	
+Questions:
+	Two user types, or a field for user type?

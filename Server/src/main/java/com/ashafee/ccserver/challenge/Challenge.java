@@ -7,15 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
 
-@Entity
-@Data
-@NoArgsConstructor
+@Entity @Data @NoArgsConstructor
 public class Challenge {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int challengeID;
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    private long challengeID;
     private String name;
     private Language language;
     private String initialCode;
