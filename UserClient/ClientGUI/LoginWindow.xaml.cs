@@ -26,9 +26,10 @@ namespace ClientGUI
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             UserData = textBoxEmail.Text + ", " + passwordBox1.Password;
+            DialogResult = true;
             Close();
         }
     }
