@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace ClientModels
+﻿namespace ClientModels
 {
-    public interface IModel
+    public interface IChallenge
     {
-        Challenge CurrentChallenge { get; set; }
-        List<Challenge> Challenges { get; set; }
-        User CurrentUser { get; set; }
-        List<Ranking> Rankings { get; set; }
+        long challengeID { get; set; }
+        string InitialCode { get; set; }
+        Language language { get; set; }
+        string name { get; set; }
     }
 }

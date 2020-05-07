@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGui", "ClientGUI\ClientGui.csproj", "{563DB4E0-66E1-4B6E-886E-1C7BC1103861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientModel", "ClientModel\ClientModel.csproj", "{D92090B3-CC0A-4CC7-9D04-B2CAB4A907F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientModels", "ClientModel\ClientModels.csproj", "{D92090B3-CC0A-4CC7-9D04-B2CAB4A907F2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTests", "Tests\ClientTests.csproj", "{61D18F7F-922F-4158-9403-9AA0E27DCCFD}"
 EndProject
