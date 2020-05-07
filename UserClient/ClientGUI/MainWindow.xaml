@@ -23,9 +23,9 @@
         <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="3">
             <TextBlock x:Name="textblock" Text="{Binding UserName}" Height="30" Width="400" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
-        <Button Content="Show example objects" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button1" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Width="104" Click="Examples_Click"/>
-        <TextBlock x:Name="userExample" Text="{Binding UserExample, Mode=TwoWay}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <TextBlock x:Name="challengeExample" Text="{Binding ChallengeExample}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <TextBlock x:Name="rankingExample" Text="{Binding RankingExample}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Content="Show example objects" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button1" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Width="104" Click="Examples_Click"/>
+        <Button Content="Submit Challenge" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button2" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Width="104" Click="Submit_Challenge"/>
+        <TextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
+        <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
     </Grid>
 </Window>

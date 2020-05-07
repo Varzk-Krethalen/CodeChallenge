@@ -9,7 +9,7 @@
             this.challengeID = challengeID;
             this.name = name;
             this.language = language;
-            InitialCode = initialCode;
+            this.initialCode = initialCode;
         }
 
         public long challengeID { get; set; }
@@ -18,6 +18,6 @@
 
         public Language language { get; set; }
 
-        public string InitialCode { get; set; }
+        public string initialCode { get; set; }
     }
 }

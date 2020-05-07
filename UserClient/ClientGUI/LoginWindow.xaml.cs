@@ -16,7 +16,7 @@ namespace ClientGUI
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            UserData = textBoxEmail.Text + ", " + passwordBox1.Password;
+            UserData = usernameBox.Text + ", " + passwordBox.Password;
             DialogResult = true;
             Close();
         }

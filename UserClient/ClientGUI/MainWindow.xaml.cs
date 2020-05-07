@@ -14,7 +14,12 @@ namespace ClientGUI
 
         private void Examples_Click(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).RetrieveExamples();
+            ((MainViewModel)DataContext).RetrieveChallenge();
+        }
+
+        private void Submit_Challenge(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).SubmitChallenge();
         }
     }
 }

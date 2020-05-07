@@ -8,20 +8,34 @@ namespace ClientGUI
     public class MainViewModel : ViewModelBase
     {
         private string userName;
-        private string userExample;
-        private string challengeExample;
-        private string rankingExample;
+        private string challengeCode;
+        private string challengeStatus;
+        private IChallenge currentChallenge;
 
         private string UserData { get; set; }
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
-        public string UserExample { get => userExample; set => SetProperty(ref userExample, value); }
-        public string ChallengeExample { get => challengeExample; set => SetProperty(ref challengeExample, value); }
-        public string RankingExample { get => rankingExample; set => SetProperty(ref rankingExample, value); }
+        public string ChallengeCode
+        {
+            get => challengeCode; set
+            {
+                SetProperty(ref challengeCode, value);
+                CurrentChallenge.initialCode = challengeCode;
+            }
+        }
+        public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
         public IModel Model { get; set; } = new RemoteModel();
+        private IChallenge CurrentChallenge
+        {
+            get => currentChallenge; set
+            {
+                currentChallenge = value;
+                ChallengeCode = currentChallenge.initialCode;
+            }
+        }
 
         public MainViewModel()
         {
-            if (RequestLogin() == false) 
+            if (RequestLogin() == false)
             {
                 //Close the window.
             }
@@ -39,21 +53,30 @@ namespace ClientGUI
             return false;
         }
 
-        public void RetrieveExamples()
+        public void RetrieveChallenge()
         {
-            UserExample = "Example user!";
-            RetrieveChallenges();
-            RankingExample = "Example ranking!";
-        }
-
-        private void RetrieveChallenges()
-        {
+            ChallengeStatus = "updating...";
             BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler((sender, e) => {
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
                 List<Challenge> challenges = Model.GetChallenges();
-                ChallengeExample = challenges[0].InitialCode;
+                CurrentChallenge = challenges[0];
             });
             worker.RunWorkerAsync();
+        }
+
+        public void SubmitChallenge()
+        {
+            if (CurrentChallenge != null)
+            {
+                ChallengeStatus = "updating...";
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += new DoWorkEventHandler((sender, e) =>
+                {
+                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge).ResultString;
+                }); //not using Success - remove?
+                worker.RunWorkerAsync();
+            }
         }
     }
 }

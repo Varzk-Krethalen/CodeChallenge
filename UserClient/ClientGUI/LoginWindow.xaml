@@ -22,10 +22,10 @@
             </Grid.RowDefinitions>
             <TextBlock Height="23" HorizontalAlignment="Center" Name="textBlock1" Text="Username" VerticalAlignment="Top" Width="67" Grid.Column="0" Grid.Row="0"/>
             <TextBlock Height="23" HorizontalAlignment="Center" Name="textBlock2" Text="Password" VerticalAlignment="Top" Width="77" Grid.Column="0" Grid.Row="1" />
-            <TextBox Height="23" HorizontalAlignment="Center" Margin="25,0,0,0" Name="textBoxEmail" VerticalAlignment="Top" Width="247" Grid.Column="1" Grid.Row="0"/>
-            <PasswordBox Height="23" HorizontalAlignment="Center" Margin="25,0,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="247" Grid.Column="1" Grid.Row="1"/>
+            <TextBox Height="23" HorizontalAlignment="Center" Margin="25,0,0,0" Name="usernameBox" VerticalAlignment="Top" Width="247" Grid.Column="1" Grid.Row="0"/>
+            <PasswordBox Height="23" HorizontalAlignment="Center" Margin="25,0,0,0" Name="passwordBox" VerticalAlignment="Top" Width="247" Grid.Column="1" Grid.Row="1"/>
         </Grid>
         <Button Content="Login" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button1" VerticalAlignment="Bottom" Width="104" Click="LoginButton_Click"/>
-        <TextBlock Height="23" HorizontalAlignment="Left" x:Name ="errormessage" VerticalAlignment="Top" Width="247" Margin="118,253,0,0"  OpacityMask="Crimson" Foreground="#FFE5572C"/>
+        <TextBlock Height="23" HorizontalAlignment="Center" x:Name ="errormessage" VerticalAlignment="Top" Width="247" Margin="0,270,0,0"  OpacityMask="Crimson" Foreground="#FFE5572C"/>
     </Grid>
 </Window>
