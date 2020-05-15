@@ -89,14 +89,13 @@ public class Compiler {
         String classpath = new File(".").getCanonicalPath() + "/" + challengeDir + ";" + System.getProperty("java.class.path");
         List<String> command = new ArrayList<>();
         command.add(javaBin);
-        command.addAll(jvmArgs);
+        command.addAll(jvmArgs); //TODO: File access restriction
         command.add("-cp");
         command.add(classpath);
         command.add(className);
         command.addAll(args);
         ProcessBuilder builder = new ProcessBuilder(command);
         Process process = builder
-                .directory(null)
                 .redirectErrorStream(true)
                 .start();
         process.getOutputStream().close();
