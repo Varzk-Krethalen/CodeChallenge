@@ -1,30 +1,44 @@
 package com.ashafee.ccserver.challenge.java;
 
+import org.springframework.util.FileSystemUtils;
+
 import javax.tools.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class Compiler {
     private StringBuilder output = new StringBuilder();
+    private final Path baseChallengeDir = Path.of("target/classes/challengebuilds");
+    private String challengeDir;
+    private final String className = "Challenge";
+
+    public Compiler() {
+        if (Files.notExists(baseChallengeDir)) {
+            try {
+                Files.createDirectories(baseChallengeDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     // adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
     public String compile(String code) {
         try {
+            challengeDir = baseChallengeDir + "/" + Files.createTempDirectory(baseChallengeDir, null).getFileName();
+
             /** Compilation Requirements *********************************************************************************************/
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
-            //fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File("target/classes/challengebuilds")));
-
+            fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(challengeDir)));
+            //TODO: create dir if not there
             Writer outputWriter = new StringWriter();
 
             JavaCompiler.CompilationTask task = compiler.getTask(
@@ -33,13 +47,13 @@ public class Compiler {
                     diagnostics,
                     new ArrayList<String>(),
                     null,
-                    Arrays.asList(new JavaSourceFromString("Challenge", code)));
+                    Arrays.asList(new JavaSourceFromString(className, code)));
             /********************************************************************************************* Compilation Requirements **/
             if (task.call()) {
                 List<String> arguments = new ArrayList<>();
 
                 try {
-                    exec("Challenge", new ArrayList<String>(), arguments);
+                    exec(className, new ArrayList<String>(), arguments);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -56,8 +70,15 @@ public class Compiler {
             }
             fileManager.close();
             return outputWriter.toString();
-        } catch (IOException exp) {
-            return exp.getMessage();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+        finally { //TODO: if compile/run are split out, consider when to delete the temp dir
+            try {
+                FileSystemUtils.deleteRecursively(Path.of(challengeDir));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -65,7 +86,7 @@ public class Compiler {
     public int exec(String className, List<String> jvmArgs, List<String> args) throws Exception {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-        String classpath = new File(".").getCanonicalPath() + ";" + System.getProperty("java.class.path");
+        String classpath = new File(".").getCanonicalPath() + "/" + challengeDir + ";" + System.getProperty("java.class.path");
         List<String> command = new ArrayList<>();
         command.add(javaBin);
         command.addAll(jvmArgs);
