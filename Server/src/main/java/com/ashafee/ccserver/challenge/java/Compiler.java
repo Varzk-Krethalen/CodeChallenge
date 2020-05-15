@@ -12,16 +12,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-// adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
+
 public class Compiler {
     private StringBuilder output = new StringBuilder();
 
+    // adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
     public String compile(String code) {
         try {
             /** Compilation Requirements *********************************************************************************************/
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
+            //fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File("target/classes/challengebuilds")));
 
             Writer outputWriter = new StringWriter();
 
@@ -54,7 +56,7 @@ public class Compiler {
             }
             fileManager.close();
             return outputWriter.toString();
-        } catch (IOException exp) { //| ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exp) {
+        } catch (IOException exp) {
             return exp.getMessage();
         }
     }
@@ -71,11 +73,10 @@ public class Compiler {
         command.add(classpath);
         command.add(className);
         command.addAll(args);
-        File test = new File(".");
-        ProcessBuilder builder = new ProcessBuilder(command)
-                .directory(test)
-                .redirectErrorStream(true);
+        ProcessBuilder builder = new ProcessBuilder(command);
         Process process = builder
+                .directory(null)
+                .redirectErrorStream(true)
                 .start();
         process.getOutputStream().close();
 
@@ -86,9 +87,9 @@ public class Compiler {
         return process.exitValue();
     }
 
-    private void printLines(String name, InputStream ins) throws Exception {
+    //adapted from code by Almas Baimagambetov
+    private void printLines(String name, InputStream ins) {
         output = new StringBuilder();
-
         Thread t = new Thread(() -> {
             String line = null;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
