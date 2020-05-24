@@ -2,13 +2,13 @@ PROCESS:
 
 Server:
 
-	Add database interface & mysql implementation
-	Create basic initial database
+	//Add database interface & mysql implementation
+	//Create basic initial database
 	Create interfaces - User, Challenge, CodeValidator, ValidityTest
 	Create objects - AdminUser, RestrictedUser, JavaChallenge, JavaCodeValidator, ValidityTestCategory, ValidityTestSingle
 	Error handling / 404s and stuff
 	Testlist and initial tests
-	Test retrieving challenge
+	//Test retrieving challenge
 	
 	error catching!
 	
