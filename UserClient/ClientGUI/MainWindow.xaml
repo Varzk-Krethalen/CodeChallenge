@@ -9,23 +9,63 @@
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="3">
-            <TextBlock x:Name="textblock" Text="{Binding UserName}" Height="30" Width="400" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Content="Log Out" HorizontalAlignment="Right" Margin="0,1,2,0" VerticalAlignment="Top" Width="104" Click="Log_Out"/>
+        <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="4"> <!--fix-->
+            <TextBlock x:Name="textblock" Text="{Binding UserName}" Width="auto" FontSize="14" HorizontalAlignment="Right" Margin="0,1,108,0" VerticalAlignment="Top" />
         </Border>
-        <Button Content="Show example objects" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button1" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Width="104" Click="Examples_Click"/>
-        <Button Content="Submit Challenge" Height="23" HorizontalAlignment="Center" Margin="0,0,0,50" Name="button2" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Width="104" Click="Submit_Challenge"/>
-        <TextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
-        <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" Height="auto" Width="auto" FontSize="20" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
+        <TabControl>
+            <TabItem Header="Select Challenge">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="9*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ListView Grid.RowSpan="2"><!--Add a gridsplitter bit-->
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Available Challenges"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <TextBlock Text="Challenges go hereish" Grid.Row="0" Grid.Column="1"/>
+                    <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Click="Load_Challenge"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Current Challenge" x:Name="currentChallenge">
+                <Grid ShowGridLines="True"><!--may need border per cell-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="8*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="challengeTitle" Text="Id - Language - Name" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                    <TextBlock x:Name="challengeDesc" Text="Need a description" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+                    <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Click="Submit_Challenge"/>
+                    <TextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" Height="auto" Width="auto" FontSize="20" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" FontSize="20" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="User Ranking">
+                retrieve generated ranking list. Just center it.
+            </TabItem>
+            <TabItem x:Name="challengeManagement" Header="Challenge Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
+                add/remove/edit challenges
+            </TabItem>
+            <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
+                add/remove/edit users
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

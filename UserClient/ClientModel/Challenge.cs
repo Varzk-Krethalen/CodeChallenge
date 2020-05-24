@@ -4,6 +4,8 @@
 
     public class Challenge : IChallenge
     {
+        public Challenge() { }
+
         public Challenge(long challengeID, string name, Language language, string initialCode)
         {
             this.challengeID = challengeID;
@@ -19,5 +21,5 @@
         public Language language { get; set; }
 
         public string initialCode { get; set; }
-    }
+    }//TODO: Add challenge descriptions
 }

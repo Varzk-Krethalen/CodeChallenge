@@ -12,7 +12,7 @@ namespace ClientGUI
             InitializeComponent();
         }
 
-        private void Examples_Click(object sender, RoutedEventArgs e)
+        private void Load_Challenge(object sender, RoutedEventArgs e)
         {
             ((MainViewModel)DataContext).RetrieveChallenge();
         }
@@ -20,6 +20,11 @@ namespace ClientGUI
         private void Submit_Challenge(object sender, RoutedEventArgs e)
         {
             ((MainViewModel)DataContext).SubmitChallenge();
+        }
+
+        private void Log_Out(object sender, RoutedEventArgs e)
+        {
+            //TODO: Add logout system.
         }
     }
 }
