@@ -40,7 +40,9 @@
                         </ListView.Style>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Available Challenges"/>
+                                <GridViewColumn Header="Id"/>
+                                <GridViewColumn Header="Challenge"/>
+                                <GridViewColumn Header="Language"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -75,9 +77,31 @@
             </TabItem>
             <TabItem Header="User Ranking">
                 retrieve generated ranking list. Just center it.
+                list of ranked users - top 20? In second pane, do what?
+                or just single pane?
+                description of ranking? options to narrow (e.g. by challenge id)
             </TabItem>
             <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
-                add/remove/edit users
+                <!--add/remove/edit users-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="9*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2">
+                        <!--Add a gridsplitter bit-->
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="User"/>
+                                <GridViewColumn Header="Type"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
