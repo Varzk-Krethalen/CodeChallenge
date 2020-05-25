@@ -14,33 +14,49 @@
     </Window.Resources>
     <Grid>
         <Button Content="Log Out" HorizontalAlignment="Right" Margin="0,1,2,0" VerticalAlignment="Top" Width="104" Click="Log_Out"/>
-        <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="4"> <!--fix-->
-            <TextBlock x:Name="textblock" Text="{Binding UserName}" Width="auto" FontSize="14" HorizontalAlignment="Right" Margin="0,1,108,0" VerticalAlignment="Top" />
-        </Border>
-        <TabControl>
-            <TabItem Header="Select Challenge">
+        <TextBlock x:Name="textblock" Text="{Binding UserName}" Width="auto" FontSize="14" HorizontalAlignment="Right" Margin="0,1,108,0" VerticalAlignment="Top" />
+        <!--click on name should bring to settings?--> 
+        <TabControl x:Name="tabControl">
+            <TabItem Header="Challenges" Name="challengesListTab">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="9*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.RowSpan="2"><!--Add a gridsplitter bit-->
+                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2"><!--Add a gridsplitter bit-->
+                        <ListView.Style>
+                            <Style TargetType="{x:Type ListView}">
+                                <Setter Property="Grid.ColumnSpan" Value="2" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.AdminToolsEnabled}" Value="False">
+                                        <Setter Property="Grid.ColumnSpan" Value="1" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Available Challenges"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <TextBlock Text="Challenges go hereish" Grid.Row="0" Grid.Column="1"/>
+                    <TextBlock Text="Challenges go here: id, name, lang, desc, preview" Grid.Row="0" Grid.Column="1"/>
+                    <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,0,0,0" Grid.Row="1" Grid.Column="0" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    <Button Content="Edit Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="1" Grid.Column="1" Click="Edit_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
                     <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Click="Load_Challenge"/>
+                    <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Grid.Row="1" Grid.Column="1" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
+                    <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,1,1,1"/>
+                    <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
+                    <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0,1,1,1"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Current Challenge" x:Name="currentChallenge">
-                <Grid ShowGridLines="True"><!--may need border per cell-->
+            <TabItem Header="Current Challenge" x:Name="currentChallengeTab">
+                <Grid ShowGridLines="True"><!--will need border per cell, or at least for some-->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>
@@ -59,9 +75,6 @@
             </TabItem>
             <TabItem Header="User Ranking">
                 retrieve generated ranking list. Just center it.
-            </TabItem>
-            <TabItem x:Name="challengeManagement" Header="Challenge Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
-                add/remove/edit challenges
             </TabItem>
             <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
                 add/remove/edit users
