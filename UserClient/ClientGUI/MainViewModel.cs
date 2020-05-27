@@ -32,6 +32,7 @@ namespace ClientGUI
                 ChallengeCode = currentChallenge.initialCode;
             }
         }
+        public bool AdminToolsEnabled { get; private set; }
 
         public MainViewModel()
         {
@@ -39,6 +40,8 @@ namespace ClientGUI
             {
                 //Close the window.
             }
+            CurrentChallenge = new Challenge();
+            AdminToolsEnabled = true;
         }
 
         public bool RequestLogin()
@@ -47,7 +50,7 @@ namespace ClientGUI
             if (loginWindow.ShowDialog() == true)
             {
                 UserData = loginWindow.UserData;
-                UserName = $"Hello, {UserData.Split(',')[0]}";
+                UserName = $"{UserData.Split(',')[0]}";
                 return true;
             }
             return false;
@@ -60,7 +63,14 @@ namespace ClientGUI
             worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
                 List<Challenge> challenges = Model.GetChallenges();
-                CurrentChallenge = challenges[0];
+                if (challenges.Count > 0)
+                {
+                    CurrentChallenge = challenges[0];
+                }
+                else
+                {
+                    ChallengeStatus = "Failed to communicate with server";
+                }
             });
             worker.RunWorkerAsync();
         }
