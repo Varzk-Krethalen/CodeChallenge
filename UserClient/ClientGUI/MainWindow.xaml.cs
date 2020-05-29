@@ -41,6 +41,7 @@ namespace ClientGUI
             if (((MainViewModel)DataContext).RequestLogin())
             {
                 SetVisibility(true);
+                ((MainViewModel)DataContext).RefreshChallenges();
             }
             else
             {
@@ -48,9 +49,14 @@ namespace ClientGUI
             }
         }
 
+        private void Refresh_Challenges(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).RefreshChallenges();
+        }
+
         private void Load_Challenge(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).RetrieveChallenge();
+            ((MainViewModel)DataContext).LoadSelectedChallenge();
             currentChallengeTab.IsSelected = true; //TODO: Only if succeessful
             //switch to challenge window
         }

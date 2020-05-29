@@ -1,4 +1,5 @@
 ﻿using ClientModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -9,17 +10,31 @@ namespace ClientGUI
         private string userName;
         private string challengeCode;
         private string challengeStatus;
+        private List<Challenge> challengeList;
+        private Challenge selectedChallenge;
+        private string challengeDesc;
 
         private string UserData { get; set; }
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
         public string ChallengeCode { get => challengeCode; set => SetProperty(ref challengeCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
-        public IModel Model { get; set; } = new RemoteModel();
+        public IModel Model { get; private set; } = new RemoteModel();//TODO: pass in from App
         private IChallenge CurrentChallenge { get; set; }
         public bool AdminToolsEnabled { get; private set; }
+        public List<Challenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
+        public Challenge SelectedChallenge
+        {
+            get => selectedChallenge; set
+            {
+                selectedChallenge = value;
+                ChallengeDesc = $"{value.name}:\r\n\r\n{value.description}\r\n\r\nInitial Code:\r\n{value.initialCode}";
+            }
+        }
+        public string ChallengeDesc { get => challengeDesc; private set => SetProperty(ref challengeDesc, value); }
 
         public MainViewModel()
         {
+            ChallengeList = new List<Challenge>();// { new Challenge(1, "a", Language.JAVA, "b", "c") };
             CurrentChallenge = new Challenge();
             AdminToolsEnabled = true;
         }
@@ -36,21 +51,23 @@ namespace ClientGUI
             return false;
         }
 
-        public void RetrieveChallenge()
+        public void LoadSelectedChallenge()
         {
-            ChallengeStatus = "updating...";
+            ChallengeStatus = "loading...";
+            CurrentChallenge = SelectedChallenge; //need a deep copy...
+            ChallengeCode = CurrentChallenge.initialCode;
+        }
+
+        public void RefreshChallenges()
+        {
+            //ChallengeStatus = "updating...";
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
-                List<Challenge> challenges = Model.GetChallenges();
-                if (challenges.Count > 0)
+                ChallengeList = Model.GetChallenges();
+                if (ChallengeList.Count == 0)
                 {
-                    CurrentChallenge = challenges[0];
-                    ChallengeCode = CurrentChallenge.initialCode;
-                }
-                else
-                {
-                    ChallengeStatus = "Failed to communicate with server";
+                    //ChallengeStatus = "Failed to communicate with server";
                 }
             });
             worker.RunWorkerAsync();

@@ -27,32 +27,33 @@
                         <RowDefinition Height="9*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2"><!--Add a gridsplitter bit-->
-                        <ListView.Style>
-                            <Style TargetType="{x:Type ListView}">
-                                <Setter Property="Grid.ColumnSpan" Value="2" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.AdminToolsEnabled}" Value="False">
-                                        <Setter Property="Grid.ColumnSpan" Value="1" />
-                                    </DataTrigger>
-                                </Style.Triggers>
+                    <ListView Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Path=ChallengeList}" SelectedItem="{Binding Path=SelectedChallenge}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True">
+                        <!--Add a gridsplitter bit-->
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
                             </Style>
-                        </ListView.Style>
+                        </ListView.Resources>
                         <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Id"/>
-                                <GridViewColumn Header="Challenge"/>
-                                <GridViewColumn Header="Language"/>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="Challenge" DisplayMemberBinding="{Binding name}"/>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding challengeID}"/>
+                                <GridViewColumn Header="Language" DisplayMemberBinding="{Binding language}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <TextBlock Text="Challenges go here: id, name, lang, desc, preview" Grid.Row="0" Grid.Column="1"/>
-                    <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,0,0,0" Grid.Row="1" Grid.Column="0" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
-                    <Button Content="Edit Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="1" Grid.Column="1" Click="Edit_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
-                    <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Click="Load_Challenge"/>
-                    <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Grid.Row="1" Grid.Column="1" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    <TextBlock Text="{Binding ChallengeDesc}" Grid.Row="0" Grid.Column="1"/>
+                    <UniformGrid Grid.Row="1" Grid.Column="0" Rows="1">
+                        <Button x:Name="refresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Challenges"/>
+                        <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    </UniformGrid>
+                    <UniformGrid Grid.Row="1" Grid.Column="2" Rows="1">
+                        <Button Content="Edit Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Click="Edit_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                        <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Load_Challenge"/>
+                        <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    </UniformGrid>
                     <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
-                    <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,1,1,1"/>
+                    <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,1,1,1" Height="391" VerticalAlignment="Bottom"/>
                     <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
                     <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0,1,1,1"/>
                 </Grid>

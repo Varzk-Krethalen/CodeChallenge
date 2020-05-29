@@ -15,7 +15,5 @@ public class Challenge {
     private String name;
     private Language language;
     private String initialCode;
-//    private Date modifiedDate;
-//    private String author;
-
-}
+    private String description;
+}   //Extension: last modified date, author
