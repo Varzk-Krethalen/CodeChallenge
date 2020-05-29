@@ -13,5 +13,8 @@ namespace ClientModels
         List<Ranking> GetRanking(long rankingId);
 
         List<Ranking> GetRankings();
+        bool AddChallenge(IChallenge challenge);
+        bool UpdateChallenge(IChallenge challenge);
+        bool DeleteChallenge(long challengeId);
     }
 }

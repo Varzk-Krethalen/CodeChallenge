@@ -1,0 +1,26 @@
+﻿<Window x:Class="ClientGUI.ChallengeEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientGUI"
+        mc:Ignorable="d"
+        Title="Challenge Editor" Height="450" Width="800">
+    <Window.DataContext>
+        <local:ChallengeEditorViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <StackPanel>
+            <TextBox Text="HI!"/>
+            <!--drop down enum-->
+            <TextBox Text="{Binding Challenge.language}" IsEnabled="{Binding Editing}"/>
+            <TextBox Text="{Binding Challenge.name}"/>
+            <TextBox Text="{Binding Challenge.description}"/>
+            <TextBox Text="{Binding Challenge.initialCode}"/>
+            <TextBox Text="validation tests"/>
+            <Button Content="Apply" Click="Apply_Button"/>
+            <Button Content="Cancel" Click="Close_Button"/>
+
+        </StackPanel>
+    </Grid>
+</Window>

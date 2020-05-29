@@ -20,7 +20,7 @@ public class JPADataAccessor<T> {
         return dataRepository.findById(entityID.longValue());
     }
 
-    public void saveEntity(T entity) {
-        dataRepository.save(entity);
+    public T saveEntity(T entity) {
+        return dataRepository.save(entity);
     }
 }

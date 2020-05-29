@@ -18,7 +18,7 @@ namespace ClientModels
         public Challenge GetChallenge(long challengeId)
         {
             throw new NotImplementedException();
-        }
+        } //TODO: should need, as the list should be paged instead
 
         public ChallengeResult SubmitChallenge(long challengeId, string challengeCode)
         {
@@ -60,6 +60,24 @@ namespace ClientModels
         }
 
         public List<Ranking> GetRanking(long rankingId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AddChallenge(IChallenge challenge)
+        {
+            RestRequest request = new RestRequest("challenge/add", Method.POST);
+            request.AddParameter("application/json", JsonConvert.SerializeObject(challenge), ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            return response.IsSuccessful;
+        }
+
+        public bool UpdateChallenge(IChallenge challenge)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteChallenge(long challengeId)
         {
             throw new NotImplementedException();
         }

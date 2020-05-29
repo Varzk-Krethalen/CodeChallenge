@@ -73,17 +73,21 @@ namespace ClientGUI
 
         private void Add_Challenge(object sender, RoutedEventArgs e)
         {
-            //open popup
+            ((MainViewModel)DataContext).AddChallenge();
         }
 
         private void Edit_Challenge(object sender, RoutedEventArgs e)
         {
-            //open popup - same as adding?
+            ((MainViewModel)DataContext).EditSelectedChallenge();
         }
 
         private void Delete_Challenge(object sender, RoutedEventArgs e)
         {
-            //confirmation dialog, then do a delete
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                ((MainViewModel)DataContext).DeleteSelectedChallenge();
+            }
         }
     }
 }

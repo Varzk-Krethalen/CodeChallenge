@@ -45,8 +45,10 @@ public class ChallengeHandler {
     }
 
     //also return Id?
-    @PostMapping(value = "/")
-    public boolean addChallenge(@RequestParam String name, @RequestParam Language language, @RequestParam String initialCode) {
-        return false; //TODO
+    @PostMapping(value = "/add")
+    public boolean addChallenge(@RequestBody Challenge challenge) {
+        challenge.setChallengeID(0);
+        var savedChallenge = accessor.saveEntity(challenge);
+        return savedChallenge.getChallengeID() != 0; //TODO: NOT BEING USED! NOT A RETURNED STATUS!
     }
 }
