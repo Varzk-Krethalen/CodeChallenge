@@ -5,11 +5,11 @@ namespace ClientGUI
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class LoginDialog : Window
     {
         public string UserData { get; set; }
 
-        public LoginWindow()
+        public LoginDialog()
         {
             InitializeComponent();
         }

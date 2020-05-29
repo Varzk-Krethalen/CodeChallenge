@@ -8,6 +8,7 @@ namespace ClientGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainViewModel viewModel;
         private double previousWidth = 800;
         private double previousHeight = 450;
 
@@ -15,6 +16,7 @@ namespace ClientGUI
         {
             InitializeComponent();
             SetVisibility(false);
+            viewModel = DataContext as MainViewModel;
         }
 
         private void SetVisibility(bool visible)
@@ -38,10 +40,10 @@ namespace ClientGUI
         //TODO: consider doing by App.xaml.cs doing the login bit first
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (((MainViewModel)DataContext).RequestLogin())
+            if (viewModel.RequestLogin())
             {
                 SetVisibility(true);
-                ((MainViewModel)DataContext).RefreshChallenges();
+                viewModel.RefreshChallenges();
             }
             else
             {
@@ -51,19 +53,19 @@ namespace ClientGUI
 
         private void Refresh_Challenges(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).RefreshChallenges();
+            viewModel.RefreshChallenges();
         }
 
         private void Load_Challenge(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).LoadSelectedChallenge();
+            viewModel.LoadSelectedChallenge();
             currentChallengeTab.IsSelected = true; //TODO: Only if succeessful
             //switch to challenge window
         }
 
         private void Submit_Challenge(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).SubmitChallenge();
+            viewModel.SubmitChallenge();
         }
 
         private void Log_Out(object sender, RoutedEventArgs e)
@@ -73,12 +75,20 @@ namespace ClientGUI
 
         private void Add_Challenge(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).AddChallenge();
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog();
+            if (challengeEditor.ShowDialog() == true)
+            {
+                viewModel.AddChallenge(challengeEditor.Challenge);
+            }
         }
 
         private void Edit_Challenge(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)DataContext).EditSelectedChallenge();
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.SelectedChallenge);
+            if (challengeEditor.ShowDialog() == true)
+            {
+                viewModel.EditSelectedChallenge(challengeEditor.Challenge);
+            }
         }
 
         private void Delete_Challenge(object sender, RoutedEventArgs e)
@@ -86,7 +96,7 @@ namespace ClientGUI
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                ((MainViewModel)DataContext).DeleteSelectedChallenge();
+                viewModel.DeleteSelectedChallenge();
             }
         }
     }

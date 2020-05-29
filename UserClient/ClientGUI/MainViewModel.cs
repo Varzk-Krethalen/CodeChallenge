@@ -42,7 +42,7 @@ namespace ClientGUI
 
         public bool RequestLogin()
         {
-            LoginWindow loginWindow = new LoginWindow();
+            LoginDialog loginWindow = new LoginDialog();
             if (loginWindow.ShowDialog() == true)
             {
                 UserData = loginWindow.UserData;
@@ -74,51 +74,40 @@ namespace ClientGUI
             worker.RunWorkerAsync();
         }
 
-        //TODO: create window in view, pass result to viewmodel?
-        internal void EditSelectedChallenge()
+        internal void EditSelectedChallenge(IChallenge challenge)
         {
-            ChallengeEditorWindow challengeEditor = new ChallengeEditorWindow();
-            if (challengeEditor.ShowDialog() == true)
+            ChallengeDesc = "Updating Challenge...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
-                Challenge challenge = (challengeEditor.DataContext as ChallengeEditorViewModel).Challenge;
-                ChallengeDesc = "Adding Challenge...";
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((sender, e) =>
+                if (Model.UpdateChallenge(challenge))
                 {
-                    if (Model.AddChallenge(challenge))
-                    {
-                        RefreshChallenges();
-                    }
-                    else
-                    {
-                        ChallengeDesc = "Failed to communicate with server";
-                    }
-                });
-                worker.RunWorkerAsync();
-            }
-        }
+                    RefreshChallenges();
+                }
+                else
+                {
+                    ChallengeDesc = "Failed to communicate with server";
+                }
+            });
+            worker.RunWorkerAsync();
+        } //TODO: DRY
 
-        internal void AddChallenge()
+        internal void AddChallenge(IChallenge challenge)
         {
-            ChallengeEditorWindow challengeEditor = new ChallengeEditorWindow();
-            if (challengeEditor.ShowDialog() == true)
+            ChallengeDesc = "Adding Challenge...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
-                Challenge challenge = (challengeEditor.DataContext as ChallengeEditorViewModel).Challenge;
-                ChallengeDesc = "Adding Challenge...";
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((sender, e) =>
+                if (Model.AddChallenge(challenge))
                 {
-                    if (Model.AddChallenge(challenge))
-                    {
-                        RefreshChallenges();
-                    }
-                    else
-                    {
-                        ChallengeDesc = "Failed to communicate with server";
-                    }
-                });
-                worker.RunWorkerAsync();
-            }
+                    RefreshChallenges();
+                }
+                else
+                {
+                    ChallengeDesc = "Failed to communicate with server";
+                }
+            });
+            worker.RunWorkerAsync();
         }
 
         internal void DeleteSelectedChallenge()

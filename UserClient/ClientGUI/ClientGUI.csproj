@@ -56,17 +56,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ChallengeEditorWindow.cs">
-      <DependentUpon>ChallengeEditorWindow.xaml</DependentUpon>
+      <DependentUpon>ChallengeEditorDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ChallengeEditorViewModel.cs" />
     <Compile Include="CustomTextBox.cs" />
-    <Compile Include="LoginViewModel.cs" />
-    <Compile Include="LoginWindow.xaml.cs">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    <Compile Include="LoginDialog.xaml.cs">
+      <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Page Include="ChallengeEditorWindow.xaml">
+    <Page Include="ChallengeEditorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -82,7 +80,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="LoginWindow.xaml">
+    <Page Include="LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
