@@ -1,5 +1,4 @@
 ﻿using ClientModels;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -10,28 +9,13 @@ namespace ClientGUI
         private string userName;
         private string challengeCode;
         private string challengeStatus;
-        private IChallenge currentChallenge;
 
         private string UserData { get; set; }
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
-        public string ChallengeCode
-        {
-            get => challengeCode; set
-            {
-                SetProperty(ref challengeCode, value);
-                CurrentChallenge.initialCode = challengeCode;
-            }
-        }
+        public string ChallengeCode { get => challengeCode; set => SetProperty(ref challengeCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
         public IModel Model { get; set; } = new RemoteModel();
-        private IChallenge CurrentChallenge
-        {
-            get => currentChallenge; set
-            {
-                currentChallenge = value;
-                ChallengeCode = currentChallenge.initialCode;
-            }
-        }
+        private IChallenge CurrentChallenge { get; set; }
         public bool AdminToolsEnabled { get; private set; }
 
         public MainViewModel()
@@ -66,6 +50,7 @@ namespace ClientGUI
                 if (challenges.Count > 0)
                 {
                     CurrentChallenge = challenges[0];
+                    ChallengeCode = CurrentChallenge.initialCode;
                 }
                 else
                 {
@@ -83,7 +68,7 @@ namespace ClientGUI
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge).ResultString;
+                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.challengeID, ChallengeCode).ResultString;
                 }); //not using Success - remove?
                 worker.RunWorkerAsync();
             }

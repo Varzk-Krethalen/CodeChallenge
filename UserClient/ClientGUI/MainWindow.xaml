@@ -71,8 +71,8 @@
                     <TextBlock x:Name="challengeTitle" Text="Id - Language - Name" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
                     <TextBlock x:Name="challengeDesc" Text="Need a description" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
                     <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Click="Submit_Challenge"/>
-                    <TextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" Height="auto" Width="auto" FontSize="20" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" FontSize="20" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                    <local:CustomTextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" FontSize="20" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" FontSize="20" Grid.Row="2" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap"/>
                 </Grid>
             </TabItem>
             <TabItem Header="User Ranking">

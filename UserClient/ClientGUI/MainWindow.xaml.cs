@@ -15,7 +15,7 @@ namespace ClientGUI
         private void Load_Challenge(object sender, RoutedEventArgs e)
         {
             ((MainViewModel)DataContext).RetrieveChallenge();
-            currentChallengeTab.IsSelected = true;
+            currentChallengeTab.IsSelected = true; //TODO: Only if succeessful
             //switch to challenge window
         }
 

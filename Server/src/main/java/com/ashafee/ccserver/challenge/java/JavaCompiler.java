@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Compiler {
+public class JavaCompiler {
     private StringBuilder output = new StringBuilder();
-    private final Path baseChallengeDir = Path.of("target/classes/challengebuilds");
+    private final Path baseChallengeDir;
     private String challengeDir;
-    private final String className = "Challenge";
+    private final String className;
 
-    public Compiler() {
+    public JavaCompiler(String challengeDir, String className) {
+        baseChallengeDir = Path.of(challengeDir);
+        this.className = className;
         if (Files.notExists(baseChallengeDir)) {
             try {
                 Files.createDirectories(baseChallengeDir);
@@ -35,13 +37,13 @@ public class Compiler {
 
             /** Compilation Requirements *********************************************************************************************/
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(challengeDir)));
             //TODO: create dir if not there
             Writer outputWriter = new StringWriter();
 
-            JavaCompiler.CompilationTask task = compiler.getTask(
+            javax.tools.JavaCompiler.CompilationTask task = compiler.getTask(
                     null,
                     fileManager,
                     diagnostics,
@@ -82,7 +84,8 @@ public class Compiler {
         }
     }
 
-    //from https://dzone.com/articles/running-a-java-class-as-a-subprocess
+    //TODO: private?
+    //adapted from https://dzone.com/articles/running-a-java-class-as-a-subprocess
     public int exec(String className, List<String> jvmArgs, List<String> args) throws Exception {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
@@ -107,7 +110,10 @@ public class Compiler {
         return process.exitValue();
     }
 
-    //adapted from code by Almas Baimagambetov
+    /**
+     * print lines out from an InputStream to a stringbuilder
+     * adapted from code by Almas Baimagambetov
+     */
     private void printLines(String name, InputStream ins) {
         output = new StringBuilder();
         Thread t = new Thread(() -> {
@@ -126,9 +132,10 @@ public class Compiler {
 
     public String getLastOutput()
     {
-        return  output.toString();
+        return output.toString();
     }
 
+    //TODO: private?
     /**
      * A file object used to represent source coming from a string.
      * Taken from https://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html

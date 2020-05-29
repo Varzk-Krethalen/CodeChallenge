@@ -6,25 +6,28 @@ import com.ashafee.ccserver.challenge.ChallengeRunner;
 
 public class JavaChallengeRunner implements ChallengeRunner {
     private String result;
+    private String challengeBuildDir = "target/classes/challengebuilds";
+    private String challengeClassName = "Challenge";
 
     @Override
-    public Boolean validateChallenge(Challenge challenge) {
+    public Boolean challengeCodeValid(Challenge challenge, String code) {
+//        StringBuilder sb = new StringBuilder(64);
+//        sb.append("public class Challenge {\n");
+//        sb.append("    public static void main(String[] args) {\n");
+//        sb.append("        System.out.println(\"Hello world\");\n");
+//        sb.append("    }\n");
+//        sb.append("}\n");
 
-        StringBuilder sb = new StringBuilder(64);
-        sb.append("public class Challenge {\n");
-        sb.append("    public static void main(String[] args) {\n");
-        sb.append("        System.out.println(\"Hello world\");\n");
-        sb.append("    }\n");
-        sb.append("}\n");
-
-        Compiler compiler = new Compiler();
-        result = compiler.compile(sb.toString());
+        JavaCompiler compiler = new JavaCompiler(challengeBuildDir, challengeClassName);
+        result = compiler.compile(code);
         result = compiler.getLastOutput();
-        return true;
+
+        boolean success = true;
+        return success ? true : false;
     }
 
     @Override
-    public String getlastOutput() {
+    public String lastOutput() {
         return result;
     }
 }

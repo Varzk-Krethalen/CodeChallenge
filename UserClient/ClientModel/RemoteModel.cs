@@ -2,11 +2,10 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace ClientModels
 {
-    public class RemoteModel : IModel
+    public partial class RemoteModel : IModel
     {
         private RestClient client;
         private string baseUri = "http://localhost:59876/";
@@ -21,10 +20,11 @@ namespace ClientModels
             throw new NotImplementedException();
         }
 
-        public ChallengeResult SubmitChallenge(IChallenge challenge)
+        public ChallengeResult SubmitChallenge(long challengeId, string challengeCode)
         {
+            ChallengeSubmission challengeSubmission = new ChallengeSubmission(challengeId, challengeCode);
             RestRequest request = new RestRequest("challenge/submit", Method.POST);
-            request.AddParameter("application/json", JsonConvert.SerializeObject(challenge), ParameterType.RequestBody);
+            request.AddParameter("application/json", JsonConvert.SerializeObject(challengeSubmission), ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {

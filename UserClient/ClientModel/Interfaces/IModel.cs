@@ -6,7 +6,7 @@ namespace ClientModels
     {
         Challenge GetChallenge(long challengeId);
 
-        ChallengeResult SubmitChallenge(IChallenge challenge);
+        ChallengeResult SubmitChallenge(long challengeId, string challengeCode);
 
         List<Challenge> GetChallenges();
 

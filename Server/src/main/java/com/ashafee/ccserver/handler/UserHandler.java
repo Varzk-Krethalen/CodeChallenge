@@ -24,8 +24,8 @@ public class UserHandler {
 //        challenge.setLanguage(Language.JAVA);
 //        challenge.setInitialCode("throw new exception(blah)");
 //        accessor.saveEntity(challenge);
-        var c = accessor.getAllEntities().get(0);
-        c.setName("four!");
+//        var c = accessor.getAllEntities().get(0);
+//        c.setName("four!");
         //accessor.saveEntity(challenge);
         return null;
     }
