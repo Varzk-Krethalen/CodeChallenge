@@ -20,10 +20,6 @@ namespace ClientGUI
 
         public MainViewModel()
         {
-            if (RequestLogin() == false)
-            {
-                //Close the window.
-            }
             CurrentChallenge = new Challenge();
             AdminToolsEnabled = true;
         }
@@ -69,7 +65,8 @@ namespace ClientGUI
                 worker.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
                     ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.challengeID, ChallengeCode).ResultString;
-                }); //not using Success - remove?
+                }); //TODO: add proper completion dialog on success
+                //TODO: consider changing to a submit bool, with getLastResult thingy
                 worker.RunWorkerAsync();
             }
         }

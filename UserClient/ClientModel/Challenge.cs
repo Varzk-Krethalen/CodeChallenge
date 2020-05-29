@@ -6,12 +6,13 @@
     {
         public Challenge() { }
 
-        public Challenge(long challengeID, string name, Language language, string initialCode)
+        public Challenge(long challengeID, string name, Language language, string initialCode, string description)
         {
             this.challengeID = challengeID;
             this.name = name;
             this.language = language;
             this.initialCode = initialCode;
+            this.description = description;
         }
 
         public long challengeID { get; set; }
@@ -21,5 +22,7 @@
         public Language language { get; set; }
 
         public string initialCode { get; set; }
-    }//TODO: Add challenge descriptions
+
+        public string description { get; set; }
+    }
 }

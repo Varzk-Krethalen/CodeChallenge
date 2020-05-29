@@ -11,13 +11,6 @@ public class JavaChallengeRunner implements ChallengeRunner {
 
     @Override
     public Boolean challengeCodeValid(Challenge challenge, String code) {
-//        StringBuilder sb = new StringBuilder(64);
-//        sb.append("public class Challenge {\n");
-//        sb.append("    public static void main(String[] args) {\n");
-//        sb.append("        System.out.println(\"Hello world\");\n");
-//        sb.append("    }\n");
-//        sb.append("}\n");
-
         JavaCompiler compiler = new JavaCompiler(challengeBuildDir, challengeClassName);
         result = compiler.compile(code);
         result = compiler.getLastOutput();

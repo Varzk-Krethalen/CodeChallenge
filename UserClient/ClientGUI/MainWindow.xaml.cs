@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace ClientGUI
 {
@@ -7,9 +8,44 @@ namespace ClientGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private double previousWidth = 800;
+        private double previousHeight = 450;
+
         public MainWindow()
         {
             InitializeComponent();
+            SetVisibility(false);
+        }
+
+        private void SetVisibility(bool visible)
+        {
+            if (!visible) 
+            {
+                previousWidth = Width;
+                previousHeight = Height;
+            }
+            else
+            {
+                Activate();
+            }
+            Width = visible ? previousWidth : 0;
+            Height = visible ? previousHeight : 0;
+            WindowStyle = visible ? WindowStyle.SingleBorderWindow : WindowStyle.None;
+            ShowInTaskbar = visible;
+            ShowActivated = visible;
+        }
+
+        //TODO: consider doing by App.xaml.cs doing the login bit first
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (((MainViewModel)DataContext).RequestLogin())
+            {
+                SetVisibility(true);
+            }
+            else
+            {
+                Close();
+            }
         }
 
         private void Load_Challenge(object sender, RoutedEventArgs e)

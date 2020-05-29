@@ -6,5 +6,6 @@
         string initialCode { get; set; }
         Language language { get; set; }
         string name { get; set; }
+        string description { get; set; }
     }
 }
