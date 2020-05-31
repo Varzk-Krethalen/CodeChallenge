@@ -1,4 +1,6 @@
-﻿namespace ClientModels
+﻿using System.Collections.Generic;
+
+namespace ClientModels
 {
     public interface IChallenge
     {
@@ -7,5 +9,6 @@
         Language language { get; set; }
         string name { get; set; }
         string description { get; set; }
+        List<ITest> tests { get; set; }
     }
 }

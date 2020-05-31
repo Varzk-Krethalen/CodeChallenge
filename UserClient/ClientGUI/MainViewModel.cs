@@ -38,7 +38,7 @@ namespace ClientGUI
             ChallengeList = new List<Challenge>();
             CurrentChallenge = new Challenge();
             AdminToolsEnabled = true;
-        }
+        }   
 
         public bool RequestLogin()
         {

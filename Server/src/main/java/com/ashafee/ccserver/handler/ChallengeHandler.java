@@ -48,7 +48,7 @@ public class ChallengeHandler {
     @PostMapping(value = "/add")
     public boolean addChallenge(@RequestBody Challenge challenge) {
         challenge.setChallengeID(0);
-        var savedChallenge = accessor.saveEntity(challenge);
+        Challenge savedChallenge = accessor.saveEntity(challenge);
         return savedChallenge.getChallengeID() != 0; //TODO: NOT BEING USED! NOT A RETURNED STATUS!
     }
 }

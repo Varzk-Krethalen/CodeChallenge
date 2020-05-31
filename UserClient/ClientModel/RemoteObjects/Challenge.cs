@@ -1,6 +1,7 @@
-﻿namespace ClientModels
+﻿using System.Collections.Generic;
+
+namespace ClientModels
 {
-    public enum Language { JAVA }
 
     public class Challenge : IChallenge
     {
@@ -24,5 +25,6 @@
         public string initialCode { get; set; }
 
         public string description { get; set; }
+        public List<ITest> tests { get; set; }
     }
 }
