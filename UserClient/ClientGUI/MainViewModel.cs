@@ -1,29 +1,29 @@
-﻿using ClientModels;
-using System;
+﻿using ClientModels.Interfaces;
+using ClientModels.RemoteModelObjects;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 
 namespace ClientGUI
 {
     public class MainViewModel : ViewModelBase
     {
         private string userName;
-        private string challengeCode;
+        private string userCode;
         private string challengeStatus;
-        private List<Challenge> challengeList;
-        private Challenge selectedChallenge;
+        private List<IChallenge> challengeList;
+        private IChallenge selectedChallenge;
         private string challengeDesc;
+        private IChallenge currentChallenge;
 
-        private string UserData { get; set; }
+        private string UserData { get; set; } //use a User object instead
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
-        public string ChallengeCode { get => challengeCode; set => SetProperty(ref challengeCode, value); }
+        public string UserCode { get => userCode; set => SetProperty(ref userCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
         public IModel Model { get; private set; } = new RemoteModel();//TODO: pass in from App
-        private IChallenge CurrentChallenge { get; set; }
+        public IChallenge CurrentChallenge { get => currentChallenge; private set => SetProperty(ref currentChallenge, value); }
         public bool AdminToolsEnabled { get; private set; }
-        public List<Challenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
-        public Challenge SelectedChallenge
+        public List<IChallenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
+        public IChallenge SelectedChallenge
         {
             get => selectedChallenge; set
             {
@@ -35,10 +35,10 @@ namespace ClientGUI
 
         public MainViewModel()
         {
-            ChallengeList = new List<Challenge>();
-            CurrentChallenge = new Challenge();
+            ChallengeList = new List<IChallenge>();
+            CurrentChallenge = Model.NewChallengeInstance();
             AdminToolsEnabled = true;
-        }   
+        }
 
         public bool RequestLogin()
         {
@@ -54,9 +54,12 @@ namespace ClientGUI
 
         public void LoadSelectedChallenge()
         {
-            ChallengeStatus = "loading...";
-            CurrentChallenge = SelectedChallenge; //need a deep copy...
-            ChallengeCode = CurrentChallenge.initialCode;
+            if (SelectedChallenge != null)
+            {
+                ChallengeStatus = "loading...";
+                CurrentChallenge = SelectedChallenge;
+                UserCode = CurrentChallenge.initialCode;
+            }
         }
 
         public void RefreshChallenges()
@@ -124,7 +127,7 @@ namespace ClientGUI
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.challengeID, ChallengeCode).ResultString;
+                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.challengeID, UserCode).ResultString;
                 }); //TODO: add proper completion dialog on success
                 //TODO: consider changing to a submit bool, with getLastResult thingy
                 worker.RunWorkerAsync();

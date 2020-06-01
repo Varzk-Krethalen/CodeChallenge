@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClientModels
+namespace ClientModels.Interfaces
 {
     public interface IChallenge
     {

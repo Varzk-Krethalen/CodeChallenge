@@ -1,17 +1,5 @@
-﻿using ClientModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClientModels.Interfaces;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ClientGUI
 {
@@ -20,19 +8,21 @@ namespace ClientGUI
     /// </summary>
     public partial class ChallengeEditorDialog : Window
     {
-        public Challenge Challenge { get; }
+        private IModel Model { get; }
+        public IChallenge Challenge { get; }
         public bool IsNewChallenge { get; } = true;
 
         public ChallengeEditorDialog()
         {
             InitializeComponent();
-            Challenge = new Challenge();
+            Challenge = Model.NewChallengeInstance();
             DataContext = this;
         }
 
-        public ChallengeEditorDialog(Challenge challenge)
+        public ChallengeEditorDialog(IModel model, IChallenge challenge)
         {
             InitializeComponent();
+            Model = model;
             Challenge = challenge;
             IsNewChallenge = false;
             DataContext = this;

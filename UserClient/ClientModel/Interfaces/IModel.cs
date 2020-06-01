@@ -1,20 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using ClientModel.Interfaces;
+using System.Collections.Generic;
 
-namespace ClientModels
+namespace ClientModels.Interfaces
 {
     public interface IModel
     {
-        Challenge GetChallenge(long challengeId);
+        IChallenge GetChallenge(long challengeId);
 
-        ChallengeResult SubmitChallenge(long challengeId, string challengeCode);
+        IChallengeResult SubmitChallenge(long challengeId, string challengeCode);
 
-        List<Challenge> GetChallenges();
+        List<IChallenge> GetChallenges();
 
-        List<Ranking> GetRanking(long rankingId);
+        List<IRanking> GetRanking(long rankingId);
 
-        List<Ranking> GetRankings();
+        List<IRanking> GetRankings();
         bool AddChallenge(IChallenge challenge);
         bool UpdateChallenge(IChallenge challenge);
         bool DeleteChallenge(long challengeId);
+
+
+        IChallenge NewChallengeInstance();
+        IRanking NewRankingInstance();
+        ITest NewTestInstance();
+        IChallengeResult NewChallengeResultInstance();
+        IUser NewUserInstance();
     }
 }

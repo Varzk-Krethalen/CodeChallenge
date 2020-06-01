@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using ClientModel.Interfaces;
+using ClientModels.Interfaces;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace ClientModels
+namespace ClientModels.RemoteModelObjects
 {
     public partial class RemoteModel : IModel
     {
@@ -15,51 +18,54 @@ namespace ClientModels
             client = new RestClient(baseUri);
         }
 
-        public Challenge GetChallenge(long challengeId)
+        public IChallenge GetChallenge(long challengeId)
         {
             throw new NotImplementedException();
         } //TODO: should need, as the list should be paged instead
 
-        public ChallengeResult SubmitChallenge(long challengeId, string challengeCode)
+        public IChallengeResult SubmitChallenge(long challengeId, string challengeCode)
         {
-            ChallengeSubmission challengeSubmission = new ChallengeSubmission(challengeId, challengeCode);
+            RemoteChallengeSubmission challengeSubmission = new RemoteChallengeSubmission(challengeId, challengeCode);
             RestRequest request = new RestRequest("challenge/submit", Method.POST);
             request.AddParameter("application/json", JsonConvert.SerializeObject(challengeSubmission), ParameterType.RequestBody);
+
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                return JsonConvert.DeserializeObject<ChallengeResult>(response.Content);
+                return JsonConvert.DeserializeObject<RemoteChallengeResult>(response.Content) as IChallengeResult;
             }
-            return new ChallengeResult() { ResultString= "Failed to validate with server", Success = false };
+            return new RemoteChallengeResult() { ResultString = "Failed to validate with server", Success = false } as IChallengeResult;
         }
 
-        public List<Challenge> GetChallenges()
+        public List<IChallenge> GetChallenges()
         {
             RestRequest request = new RestRequest("challenge/getAll");
             IRestResponse response = client.Get(request);
             if (response.IsSuccessful)
             {
-                return JsonConvert.DeserializeObject<List<Challenge>>(response.Content);
+                return JsonConvert.DeserializeObject<List<RemoteChallenge>>(response.Content)
+                    .Cast<IChallenge>()
+                    .ToList();
             }
-            return new List<Challenge>();
+            return new List<IChallenge>();
         }
 
-        public User GetUser()
+        public RemoteUser GetUser()
         {
             throw new NotImplementedException();
         }
 
-        public bool ValidateUser(User user)
+        public bool ValidateUser(RemoteUser user)
         {
             throw new NotImplementedException();
         }
 
-        public List<Ranking> GetRankings()
+        public List<IRanking> GetRankings()
         {
             throw new NotImplementedException();
         }
 
-        public List<Ranking> GetRanking(long rankingId)
+        public List<IRanking> GetRanking(long rankingId)
         {
             throw new NotImplementedException();
         }
@@ -81,5 +87,14 @@ namespace ClientModels
         {
             throw new NotImplementedException();
         }
+
+
+
+
+        public IChallenge NewChallengeInstance() => new RemoteChallenge();
+        public IRanking NewRankingInstance() => new RemoteRanking();
+        public ITest NewTestInstance() => new RemoteTest();
+        public IChallengeResult NewChallengeResultInstance() => new RemoteChallengeResult();
+        public IUser NewUserInstance() => new RemoteUser();
     }
 }

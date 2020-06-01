@@ -21,8 +21,8 @@ public class ChallengeHandler {
     }
 
     static class ChallengeSubmission {
-        public long challengeId;
         public String challengeCode;
+        public long challengeId;
     }
 
     @PostMapping(value = "/submit", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -51,4 +51,4 @@ public class ChallengeHandler {
         Challenge savedChallenge = accessor.saveEntity(challenge);
         return savedChallenge.getChallengeID() != 0; //TODO: NOT BEING USED! NOT A RETURNED STATUS!
     }
-}
+}//TODO: delete challenges (enforce test deletion?)

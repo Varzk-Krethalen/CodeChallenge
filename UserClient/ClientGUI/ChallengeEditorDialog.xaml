@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Challenge Editor" Height="450" Width="800">
     <Grid>
-        <StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
             <!--drop down enum-->
             <TextBox Text="{Binding Challenge.language}" IsEnabled="{Binding Editing}"/>
             <TextBox Text="{Binding Challenge.name}"/>

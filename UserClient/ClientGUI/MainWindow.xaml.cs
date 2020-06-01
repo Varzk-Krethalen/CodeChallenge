@@ -84,7 +84,7 @@ namespace ClientGUI
 
         private void Edit_Challenge(object sender, RoutedEventArgs e)
         {
-            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.SelectedChallenge);
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model, viewModel.SelectedChallenge); //view shouldn't know about model
             if (challengeEditor.ShowDialog() == true)
             {
                 viewModel.EditSelectedChallenge(challengeEditor.Challenge);

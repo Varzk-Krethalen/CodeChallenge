@@ -15,4 +15,4 @@ public class Ranking {
 //    private User userID;
     private int userScore;
 }
-//Replace with a calculation?
+//TODO: Replace with a calculation

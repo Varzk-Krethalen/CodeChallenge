@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using ClientModels.Interfaces;
+using System.Collections.Generic;
 
-namespace ClientModels
+namespace ClientModels.RemoteModelObjects
 {
 
-    public class Challenge : IChallenge
+    public class RemoteChallenge : IChallenge
     {
-        public Challenge() { }
+        public RemoteChallenge() { }
 
-        public Challenge(long challengeID, string name, Language language, string initialCode, string description)
+        public RemoteChallenge(long challengeID, string name, Language language, string initialCode, string description)
         {
             this.challengeID = challengeID;
             this.name = name;
