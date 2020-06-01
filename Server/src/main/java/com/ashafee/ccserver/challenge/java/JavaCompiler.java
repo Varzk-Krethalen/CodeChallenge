@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 
 public class JavaCompiler {
@@ -32,6 +33,7 @@ public class JavaCompiler {
 
     // adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
     public String compile(String code) {
+        output = new StringBuilder();
         try {
             challengeDir = baseChallengeDir + "/" + Files.createTempDirectory(baseChallengeDir, null).getFileName();
 
@@ -65,9 +67,10 @@ public class JavaCompiler {
                 /************************************************************************************************* Load and execute **/
             } else {
                 for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                    System.out.format("Error on line %d in %s%n",
+                    String verboseErrorMsg =  diagnostic.toString();
+                    output.append(String.format("Error on line %d: %s\n",
                             diagnostic.getLineNumber(),
-                            diagnostic.getSource().toUri());
+                            verboseErrorMsg.substring(verboseErrorMsg.indexOf(':') + 3)));
                 }
             }
             fileManager.close();
@@ -115,7 +118,6 @@ public class JavaCompiler {
      * adapted from code by Almas Baimagambetov
      */
     private void printLines(String name, InputStream ins) {
-        output = new StringBuilder();
         Thread t = new Thread(() -> {
             String line = null;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {

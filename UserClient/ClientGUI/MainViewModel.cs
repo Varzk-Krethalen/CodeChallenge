@@ -52,14 +52,16 @@ namespace ClientGUI
             return false;
         }
 
-        public void LoadSelectedChallenge()
+        public bool LoadSelectedChallenge()
         {
             if (SelectedChallenge != null)
             {
                 ChallengeStatus = "loading...";
                 CurrentChallenge = SelectedChallenge.GetCopy();
                 UserCode = CurrentChallenge.initialCode;
+                return true;
             }
+            return false;
         }
 
         public void RefreshChallenges()

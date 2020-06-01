@@ -58,9 +58,10 @@ namespace ClientGUI
 
         private void Load_Challenge(object sender, RoutedEventArgs e)
         {
-            viewModel.LoadSelectedChallenge();
-            currentChallengeTab.IsSelected = true; //TODO: Only if succeessful
-            //switch to challenge window
+            if (viewModel.LoadSelectedChallenge())
+            {
+                currentChallengeTab.IsSelected = true;
+            }
         }
 
         private void Submit_Challenge(object sender, RoutedEventArgs e)
