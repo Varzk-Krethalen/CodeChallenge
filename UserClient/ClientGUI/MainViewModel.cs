@@ -57,7 +57,7 @@ namespace ClientGUI
             if (SelectedChallenge != null)
             {
                 ChallengeStatus = "loading...";
-                CurrentChallenge = SelectedChallenge;
+                CurrentChallenge = SelectedChallenge.GetCopy();
                 UserCode = CurrentChallenge.initialCode;
             }
         }
@@ -79,6 +79,7 @@ namespace ClientGUI
 
         internal void EditSelectedChallenge(IChallenge challenge)
         {
+            
             ChallengeDesc = "Updating Challenge...";
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler((sender, e) =>

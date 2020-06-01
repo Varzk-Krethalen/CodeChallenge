@@ -10,5 +10,7 @@ namespace ClientModels.Interfaces
         string name { get; set; }
         string description { get; set; }
         List<ITest> tests { get; set; }
+
+        IChallenge GetCopy();
     }
 }

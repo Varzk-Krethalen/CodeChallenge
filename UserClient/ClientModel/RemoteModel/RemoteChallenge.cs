@@ -6,6 +6,17 @@ namespace ClientModels.RemoteModelObjects
 
     public class RemoteChallenge : IChallenge
     {
+        public long challengeID { get; set; }
+
+        public string name { get; set; }
+
+        public Language language { get; set; }
+
+        public string initialCode { get; set; }
+
+        public string description { get; set; }
+        public List<ITest> tests { get; set; } = new List<ITest>();
+
         public RemoteChallenge() { }
 
         public RemoteChallenge(long challengeID, string name, Language language, string initialCode, string description)
@@ -17,15 +28,10 @@ namespace ClientModels.RemoteModelObjects
             this.description = description;
         }
 
-        public long challengeID { get; set; }
+        public IChallenge GetCopy()
+        {
+            return new RemoteChallenge(challengeID, name, language, initialCode, description);
+        }
 
-        public string name { get; set; }
-
-        public Language language { get; set; }
-
-        public string initialCode { get; set; }
-
-        public string description { get; set; }
-        public List<ITest> tests { get; set; }
     }
 }

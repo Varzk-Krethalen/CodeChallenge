@@ -4,19 +4,87 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientGUI"
+        xmlns:model="clr-namespace:ClientModels;assembly=ClientModel"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Challenge Editor" Height="450" Width="800">
-    <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <!--drop down enum-->
-            <TextBox Text="{Binding Challenge.language}" IsEnabled="{Binding Editing}"/>
-            <TextBox Text="{Binding Challenge.name}"/>
-            <TextBox Text="{Binding Challenge.description}"/>
-            <local:CustomTextBox Text="{Binding Challenge.initialCode}"/>
-            <TextBox Text="TODO: validation tests here"/>
-            <Button Content="Apply" Click="Apply_Button"/>
-            <Button Content="Cancel" Click="Close_Button"/>
+        Title="Challenge Editor" Height="500" Width="800">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="languages" MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:Language"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
 
-        </StackPanel>
+    <Grid Margin="10">
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="25"/>
+                <RowDefinition MinHeight="25"/>
+                <RowDefinition MinHeight="25"/>
+                <RowDefinition MinHeight="50"/>
+                <RowDefinition MinHeight="25"/>
+                <RowDefinition MinHeight="100"/>
+                <RowDefinition MinHeight="25"/>
+                <RowDefinition MinHeight="100"/>
+                <RowDefinition MinHeight="25" MaxHeight="35"/>
+                <RowDefinition MinHeight="10"/>
+                <RowDefinition MinHeight="25" MaxHeight="35"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Challenge Name" TextDecorations="Underline" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBox Text="{Binding Challenge.name}" Grid.Row="1" Grid.Column="0"/>
+            <TextBlock Text="Challenge Name" TextDecorations="Underline" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBox Text="{Binding Challenge.name}" Grid.Row="1" Grid.Column="0"/>
+
+            <TextBlock Text="Language" TextDecorations="Underline" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.language}" IsEnabled="{Binding Editing}" Grid.Row="1" Grid.Column="1"/>
+
+            <TextBlock Text="Description" TextDecorations="Underline" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBox Text="{Binding Challenge.description}" Grid.Row="3" Grid.ColumnSpan="2"/>
+
+            <TextBlock Text="Initial Code" TextDecorations="Underline" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <local:CustomTextBox Text="{Binding Challenge.initialCode}" Grid.Row="5" Grid.ColumnSpan="2"/>
+
+            <TextBlock Text="Tests" TextDecorations="Underline" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <ListView x:Name="TestList" ItemsSource="{Binding Challenge.tests}" SelectionMode="Single" 
+                      Grid.Row="7" Grid.ColumnSpan="2" SizeChanged="TestListView_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Comma Separated Input">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding inputArgs}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Expected Output">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding expectedOutput}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button Content="Add Test" Click="Add_Test" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+            <Button Content="Delete Selected Test" Click="Delete_Test" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" Margin="0,2,0,2"/>
+
+            <Button Content="Apply" Click="Apply_Button" Grid.Row="10" Grid.Column="0"/>
+            <Button Content="Cancel" Click="Close_Button" Grid.Row="10" Grid.Column="1"/>
+
+        </Grid>
     </Grid>
 </Window>

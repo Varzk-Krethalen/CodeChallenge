@@ -9,6 +9,6 @@
         {
             this.challengeId = challengeId;
             this.challengeCode = challengeCode;
-        }
+        }//TODO: Add user id, so server knows who it is
     }
 }

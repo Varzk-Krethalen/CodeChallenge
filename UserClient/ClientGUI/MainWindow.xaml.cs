@@ -75,7 +75,7 @@ namespace ClientGUI
 
         private void Add_Challenge(object sender, RoutedEventArgs e)
         {
-            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog();
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model); //TODO: view shouldn't know about model
             if (challengeEditor.ShowDialog() == true)
             {
                 viewModel.AddChallenge(challengeEditor.Challenge);
@@ -84,19 +84,25 @@ namespace ClientGUI
 
         private void Edit_Challenge(object sender, RoutedEventArgs e)
         {
-            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model, viewModel.SelectedChallenge); //view shouldn't know about model
-            if (challengeEditor.ShowDialog() == true)
-            {
-                viewModel.EditSelectedChallenge(challengeEditor.Challenge);
+            if (viewModel.SelectedChallenge != null)
+            { 
+                ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model, viewModel.SelectedChallenge);
+                if (challengeEditor.ShowDialog() == true)
+                {
+                    viewModel.EditSelectedChallenge(challengeEditor.Challenge);
+                }
             }
         }
 
         private void Delete_Challenge(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-            if (messageBoxResult == MessageBoxResult.Yes)
+            if (viewModel.SelectedChallenge != null)
             {
-                viewModel.DeleteSelectedChallenge();
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete Challenge: {viewModel.SelectedChallenge.name}", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    viewModel.DeleteSelectedChallenge();
+                }
             }
         }
     }
