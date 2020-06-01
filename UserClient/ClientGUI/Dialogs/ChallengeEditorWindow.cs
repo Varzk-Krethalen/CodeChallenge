@@ -21,6 +21,7 @@ namespace ClientGUI
             Challenge = Model.NewChallengeInstance();
             DataContext = this;
             TestListView_SizeChanged(TestList, null);
+            TestList.Items.Refresh();
         }
 
         public ChallengeEditorDialog(IModel model, IChallenge challenge)
@@ -31,6 +32,7 @@ namespace ClientGUI
             IsNewChallenge = false;
             DataContext = this;
             TestListView_SizeChanged(TestList, null);
+            TestList.Items.Refresh();
         }
 
         private void Apply_Button(object sender, RoutedEventArgs e)

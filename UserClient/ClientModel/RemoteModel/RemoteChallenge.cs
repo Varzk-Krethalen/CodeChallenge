@@ -7,22 +7,22 @@ namespace ClientModels.RemoteModelObjects
 
     public class RemoteChallenge : IChallenge
     {
-        [JsonProperty(PropertyName = "challengeID")]
+        [JsonProperty("challengeID")]
         public long ChallengeID { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "language")]
+        [JsonProperty("language")]
         public Language Language { get; set; }
 
-        [JsonProperty(PropertyName = "initialCode")]
+        [JsonProperty("initialCode")]
         public string InitialCode { get; set; }
 
-        [JsonProperty(PropertyName = "description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty(PropertyName = "tests")]
+        [JsonProperty("tests", ItemConverterType = (typeof(JsonConcreteConverter<ITest, RemoteTest>)))]
         public List<ITest> Tests { get; set; } = new List<ITest>();
 
         public RemoteChallenge() { }
@@ -38,7 +38,7 @@ namespace ClientModels.RemoteModelObjects
 
         public IChallenge GetCopy()
         {
-            return new RemoteChallenge(ChallengeID, Name, Language, InitialCode, Description);
+            return new RemoteChallenge(ChallengeID, Name, Language, InitialCode, Description) { Tests = new List<ITest>(Tests) };
         }
 
     }

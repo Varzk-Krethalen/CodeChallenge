@@ -82,10 +82,8 @@ namespace ClientGUI
 
         internal void EditSelectedChallenge(IChallenge challenge)
         {
-            
             ChallengeDesc = "Updating Challenge...";
             RunChallengeUpdateWorker(challenge, Model.UpdateChallenge);
-
         }
 
         internal void AddChallenge(IChallenge challenge)

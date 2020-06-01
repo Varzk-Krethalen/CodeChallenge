@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @RestController @RequestMapping("/challenge") @Transactional
 public class ChallengeHandler {
 
     @Autowired
     JPADataAccessor<Challenge> accessor;
+    @Autowired
+    JPADataAccessor<ChallengeTest> testAccessor;
 
     @GetMapping("/getAll")
     public List<Challenge> getChallenge() {
@@ -44,11 +47,33 @@ public class ChallengeHandler {
         return new ChallengeResult(resultString, result);
     }
 
-    //also return Id?
     @PostMapping(value = "/add")
     public boolean addChallenge(@RequestBody Challenge challenge) {
         challenge.setChallengeID(0);
-        Challenge savedChallenge = accessor.saveEntity(challenge);
-        return savedChallenge.getChallengeID() != 0; //TODO: NOT BEING USED! NOT A RETURNED STATUS!
+        Challenge savedChallenge = SaveChallenge(challenge);
+        return savedChallenge.getChallengeID() != 0;
     }
-}//TODO: delete challenges (enforce test deletion?)
+
+    //will also add if it doesn't exist
+    @PostMapping(value = "/update")
+    public boolean updateChallenge(@RequestBody Challenge challenge) {
+        Challenge savedChallenge = SaveChallenge(challenge);
+        return savedChallenge.getChallengeID() == challenge.getChallengeID();
+    }
+
+    private Challenge SaveChallenge(Challenge challenge) {
+        //SaveTests(challenge.getTests());
+        return accessor.saveEntity(challenge);
+    }
+
+    private void SaveTests(Set<ChallengeTest> tests) {
+        for (ChallengeTest test : tests) {
+            testAccessor.saveEntity(test);
+        }
+    }
+
+    @DeleteMapping(value = "/delete")
+    public boolean updateChallenge(@RequestParam long challengeId) {
+        return accessor.deleteEntity(challengeId);
+    }
+}

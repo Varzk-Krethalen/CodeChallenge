@@ -62,6 +62,7 @@
     <Compile Include="RemoteModel\RemoteRanking.cs" />
     <Compile Include="RemoteModel\RemoteModel.cs" />
     <Compile Include="RemoteModel\RemoteTest.cs" />
+    <Compile Include="RemoteModel\JsonConcreteConverter.cs" />
     <Compile Include="RemoteModel\RemoteUser.cs" />
   </ItemGroup>
   <ItemGroup>

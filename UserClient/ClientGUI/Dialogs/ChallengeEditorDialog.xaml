@@ -44,7 +44,7 @@
             <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.Language}" IsEnabled="{Binding Editing}" Grid.Row="1" Grid.Column="1"/>
 
             <TextBlock Text="Description" TextDecorations="Underline" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <TextBox Text="{Binding Challenge.Description}" Grid.Row="3" Grid.ColumnSpan="2"/>
+            <local:CustomTextBox Text="{Binding Challenge.Description}" Grid.Row="3" Grid.ColumnSpan="2"/>
 
             <TextBlock Text="Initial Code" TextDecorations="Underline" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             <local:CustomTextBox Text="{Binding Challenge.InitialCode}" Grid.Row="5" Grid.ColumnSpan="2"/>
@@ -59,7 +59,7 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Comma Separated Input">
+                        <GridViewColumn Header="Comma Separated Arguments">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding InputArgs}"/>

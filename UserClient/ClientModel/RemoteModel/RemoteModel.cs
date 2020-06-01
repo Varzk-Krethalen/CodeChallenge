@@ -43,9 +43,9 @@ namespace ClientModels.RemoteModelObjects
             IRestResponse response = client.Get(request);
             if (response.IsSuccessful)
             {
-                return JsonConvert.DeserializeObject<List<RemoteChallenge>>(response.Content)
-                    .Cast<IChallenge>()
-                    .ToList();
+                var x = JsonConvert.DeserializeObject<List<RemoteChallenge>>(response.Content);
+                var y = x.Cast<IChallenge>();
+                return y.ToList();
             }
             return new List<IChallenge>();
         }
@@ -75,17 +75,23 @@ namespace ClientModels.RemoteModelObjects
             RestRequest request = new RestRequest("challenge/add", Method.POST);
             request.AddParameter("application/json", JsonConvert.SerializeObject(challenge), ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
-            return response.IsSuccessful;
+            return response.IsSuccessful && bool.Parse(response.Content);
         }
 
         public bool UpdateChallenge(IChallenge challenge)
         {
-            throw new NotImplementedException();
+            RestRequest request = new RestRequest("challenge/update", Method.POST);
+            request.AddParameter("application/json", JsonConvert.SerializeObject(challenge), ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            return response.IsSuccessful && bool.Parse(response.Content);
         }
 
         public bool DeleteChallenge(long challengeId)
         {
-            throw new NotImplementedException();
+            RestRequest request = new RestRequest("challenge/delete", Method.DELETE);
+            request.AddParameter("challengeId", challengeId);
+            IRestResponse response = client.Execute(request);
+            return response.IsSuccessful && bool.Parse(response.Content);
         }
 
 

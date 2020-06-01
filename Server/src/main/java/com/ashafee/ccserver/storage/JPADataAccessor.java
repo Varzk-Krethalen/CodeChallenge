@@ -23,4 +23,9 @@ public class JPADataAccessor<T> {
     public T saveEntity(T entity) {
         return dataRepository.save(entity);
     }
+
+    public boolean deleteEntity(long entityId) {
+        dataRepository.deleteById(entityId);
+        return !dataRepository.existsById(entityId);
+    }
 }

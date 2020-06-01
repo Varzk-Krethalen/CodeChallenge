@@ -5,13 +5,13 @@ namespace ClientModels.RemoteModelObjects
 {
     public class RemoteTest : ITest
     {
-        [JsonProperty(PropertyName = "testID")]
+        [JsonProperty("testID")]
         public long TestID { get; set; }
 
-        [JsonProperty(PropertyName = "inputArgs")]
+        [JsonProperty("inputArgs")]
         public string InputArgs { get; set; } = string.Empty;
 
-        [JsonProperty(PropertyName = "expectedOutput")]
+        [JsonProperty("expectedOutput")]
         public string ExpectedOutput { get; set; } = string.Empty;
     }
 }

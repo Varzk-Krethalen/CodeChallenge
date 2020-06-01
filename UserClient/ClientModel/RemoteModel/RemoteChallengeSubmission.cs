@@ -4,10 +4,10 @@ namespace ClientModels.RemoteModelObjects
 {
     public class RemoteChallengeSubmission
     {
-        [JsonProperty(PropertyName = "challengeCode")]
+        [JsonProperty("challengeCode")]
         public string ChallengeCode { get; set; }
 
-        [JsonProperty(PropertyName = "challengeId")]
+        [JsonProperty("challengeId")]
         public long ChallengeId { get; set; }
 
         public RemoteChallengeSubmission(long challengeId, string challengeCode)

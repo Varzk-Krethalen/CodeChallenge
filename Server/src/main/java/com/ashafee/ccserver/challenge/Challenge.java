@@ -16,7 +16,7 @@ public class Challenge {
     private Language language;
     private String initialCode;
     private String description;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "challengeID") //extend by instead referencing a list of challenge-test from another table
     private Set<ChallengeTest> tests = new HashSet<>(); //that is, challenge independent tests
 }   //Extension: last modified date, author
