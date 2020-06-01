@@ -1,5 +1,6 @@
 ﻿using ClientModels.Interfaces;
 using ClientModels.RemoteModelObjects;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -83,28 +84,22 @@ namespace ClientGUI
         {
             
             ChallengeDesc = "Updating Challenge...";
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler((sender, e) =>
-            {
-                if (Model.UpdateChallenge(challenge))
-                {
-                    RefreshChallenges();
-                }
-                else
-                {
-                    ChallengeDesc = "Failed to communicate with server";
-                }
-            });
-            worker.RunWorkerAsync();
-        } //TODO: DRY
+            RunChallengeUpdateWorker(challenge, Model.UpdateChallenge);
+
+        }
 
         internal void AddChallenge(IChallenge challenge)
         {
             ChallengeDesc = "Adding Challenge...";
+            RunChallengeUpdateWorker(challenge, Model.AddChallenge);
+        }
+
+        private void RunChallengeUpdateWorker(IChallenge challenge, Func<IChallenge, bool> challengeTask)
+        {
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
-                if (Model.AddChallenge(challenge))
+                if (challengeTask(challenge))
                 {
                     RefreshChallenges();
                 }
