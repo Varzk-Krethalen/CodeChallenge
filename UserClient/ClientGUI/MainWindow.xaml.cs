@@ -99,7 +99,7 @@ namespace ClientGUI
         {
             if (viewModel.SelectedChallenge != null)
             {
-                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete Challenge: {viewModel.SelectedChallenge.name}", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete Challenge: {viewModel.SelectedChallenge.Name}", MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     viewModel.DeleteSelectedChallenge();

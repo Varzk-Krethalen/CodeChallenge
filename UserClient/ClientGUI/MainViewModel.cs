@@ -28,7 +28,7 @@ namespace ClientGUI
             get => selectedChallenge; set
             {
                 selectedChallenge = value;
-                ChallengeDesc = $"{value.name}:\r\n\r\n{value.description}\r\n\r\nInitial Code:\r\n{value.initialCode}";
+                ChallengeDesc = $"{value.Name}:\r\n\r\n{value.Description}\r\n\r\nInitial Code:\r\n{value.InitialCode}";
             }
         }
         public string ChallengeDesc { get => challengeDesc; private set => SetProperty(ref challengeDesc, value); }
@@ -58,7 +58,7 @@ namespace ClientGUI
             {
                 ChallengeStatus = "loading...";
                 CurrentChallenge = SelectedChallenge.GetCopy();
-                UserCode = CurrentChallenge.initialCode;
+                UserCode = CurrentChallenge.InitialCode;
                 return true;
             }
             return false;
@@ -118,7 +118,7 @@ namespace ClientGUI
 
         internal void DeleteSelectedChallenge()
         {
-            Model.DeleteChallenge(SelectedChallenge.challengeID);
+            Model.DeleteChallenge(SelectedChallenge.ChallengeID);
             RefreshChallenges();
         }
 
@@ -130,7 +130,7 @@ namespace ClientGUI
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.challengeID, UserCode).ResultString;
+                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.ChallengeID, UserCode).ResultString;
                 }); //TODO: add proper completion dialog on success
                 //TODO: consider changing to a submit bool, with getLastResult thingy
                 worker.RunWorkerAsync();

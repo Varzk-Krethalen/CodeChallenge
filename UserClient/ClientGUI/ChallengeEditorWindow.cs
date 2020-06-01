@@ -46,7 +46,7 @@ namespace ClientGUI
 
         private void Add_Test(object sender, RoutedEventArgs e)
         {
-            Challenge.tests.Add(Model.NewTestInstance());
+            Challenge.Tests.Add(Model.NewTestInstance());
             TestList.Items.Refresh();
             TestList.SelectedIndex = TestList.Items.Count - 1;
         }
@@ -55,7 +55,7 @@ namespace ClientGUI
         {
             if (TestList.SelectedValue != null)
             {
-                Challenge.tests.Remove(TestList.SelectedValue as ITest);
+                Challenge.Tests.Remove(TestList.SelectedValue as ITest);
                 TestList.Items.Refresh();
                 TestList.SelectedIndex = TestList.Items.Count - 1;
             }

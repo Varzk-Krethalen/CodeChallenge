@@ -38,21 +38,19 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Challenge Name" TextDecorations="Underline" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <TextBox Text="{Binding Challenge.name}" Grid.Row="1" Grid.Column="0"/>
-            <TextBlock Text="Challenge Name" TextDecorations="Underline" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <TextBox Text="{Binding Challenge.name}" Grid.Row="1" Grid.Column="0"/>
+            <TextBox Text="{Binding Challenge.Name}" Grid.Row="1" Grid.Column="0"/>
 
             <TextBlock Text="Language" TextDecorations="Underline" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.language}" IsEnabled="{Binding Editing}" Grid.Row="1" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.Language}" IsEnabled="{Binding Editing}" Grid.Row="1" Grid.Column="1"/>
 
             <TextBlock Text="Description" TextDecorations="Underline" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <TextBox Text="{Binding Challenge.description}" Grid.Row="3" Grid.ColumnSpan="2"/>
+            <TextBox Text="{Binding Challenge.Description}" Grid.Row="3" Grid.ColumnSpan="2"/>
 
             <TextBlock Text="Initial Code" TextDecorations="Underline" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <local:CustomTextBox Text="{Binding Challenge.initialCode}" Grid.Row="5" Grid.ColumnSpan="2"/>
+            <local:CustomTextBox Text="{Binding Challenge.InitialCode}" Grid.Row="5" Grid.ColumnSpan="2"/>
 
             <TextBlock Text="Tests" TextDecorations="Underline" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <ListView x:Name="TestList" ItemsSource="{Binding Challenge.tests}" SelectionMode="Single" 
+            <ListView x:Name="TestList" ItemsSource="{Binding Challenge.Tests}" SelectionMode="Single" 
                       Grid.Row="7" Grid.ColumnSpan="2" SizeChanged="TestListView_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -64,14 +62,14 @@
                         <GridViewColumn Header="Comma Separated Input">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding inputArgs}"/>
+                                    <TextBox Text="{Binding InputArgs}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Expected Output">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding expectedOutput}"/>
+                                    <TextBox Text="{Binding ExpectedOutput}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

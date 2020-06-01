@@ -36,9 +36,9 @@
                         </ListView.Resources>
                         <ListView.View>
                             <GridView AllowsColumnReorder="True">
-                                <GridViewColumn Header="Challenge" DisplayMemberBinding="{Binding name}"/>
-                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding challengeID}"/>
-                                <GridViewColumn Header="Language" DisplayMemberBinding="{Binding language}"/>
+                                <GridViewColumn Header="Challenge" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding ChallengeID}"/>
+                                <GridViewColumn Header="Language" DisplayMemberBinding="{Binding Language}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -70,8 +70,8 @@
                             <RowDefinition Height="8*"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="challengeTitle" Text="{Binding CurrentChallenge.name}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
-                        <TextBlock x:Name="challengeDesc" Text="{Binding CurrentChallenge.description}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
+                        <TextBlock x:Name="challengeTitle" Text="{Binding CurrentChallenge.Name}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
+                        <TextBlock x:Name="challengeDesc" Text="{Binding CurrentChallenge.Description}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
                         <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Click="Submit_Challenge"/>
                         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,1"/>
                     </Grid> <!--list the tests under description?-->

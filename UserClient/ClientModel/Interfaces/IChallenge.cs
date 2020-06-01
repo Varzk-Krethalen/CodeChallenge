@@ -4,12 +4,12 @@ namespace ClientModels.Interfaces
 {
     public interface IChallenge
     {
-        long challengeID { get; set; }
-        string initialCode { get; set; }
-        Language language { get; set; }
-        string name { get; set; }
-        string description { get; set; }
-        List<ITest> tests { get; set; }
+        long ChallengeID { get; set; }
+        string InitialCode { get; set; }
+        Language Language { get; set; }
+        string Name { get; set; }
+        string Description { get; set; }
+        List<ITest> Tests { get; set; }
 
         IChallenge GetCopy();
     }

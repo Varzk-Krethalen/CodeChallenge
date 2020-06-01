@@ -2,8 +2,8 @@
 {
     public interface ITest
     {
-        long testID { get; set; }
-        string inputArgs { get; set; }
-        string expectedOutput { get; set; }
+        long TestID { get; set; }
+        string InputArgs { get; set; }
+        string ExpectedOutput { get; set; }
     }
 }
