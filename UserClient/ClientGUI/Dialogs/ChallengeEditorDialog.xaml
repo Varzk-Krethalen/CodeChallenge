@@ -41,7 +41,7 @@
             <TextBox Text="{Binding Challenge.Name}" Grid.Row="1" Grid.Column="0"/>
 
             <TextBlock Text="Language" TextDecorations="Underline" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.Language}" IsEnabled="{Binding Editing}" Grid.Row="1" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource languages}}" SelectedItem="{Binding Challenge.Language}" IsEnabled="{Binding IsNewChallenge}" Grid.Row="1" Grid.Column="1"/>
 
             <TextBlock Text="Description" TextDecorations="Underline" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             <local:CustomTextBox Text="{Binding Challenge.Description}" Grid.Row="3" Grid.ColumnSpan="2"/>
