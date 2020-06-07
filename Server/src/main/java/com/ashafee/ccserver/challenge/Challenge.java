@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity @Data @NoArgsConstructor
 public class Challenge {
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long challengeID;
     private String name;
     private Language language;

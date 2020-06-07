@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity @Data @NoArgsConstructor
 public class ChallengeCompletion {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long resultID;
     private long challengeID;
     private long userID;
