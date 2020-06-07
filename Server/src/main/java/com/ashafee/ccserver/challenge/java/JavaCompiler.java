@@ -1,16 +1,15 @@
 package com.ashafee.ccserver.challenge.java;
 
+import com.ashafee.ccserver.challenge.ChallengeTest;
 import org.springframework.util.FileSystemUtils;
 
 import javax.tools.*;
+import javax.tools.JavaCompiler.CompilationTask;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 public class JavaCompiler {
@@ -18,10 +17,12 @@ public class JavaCompiler {
     private final Path baseChallengeDir;
     private String challengeDir;
     private final String className;
+    private List<String> jvmArgs;
 
     public JavaCompiler(String challengeDir, String className) {
         baseChallengeDir = Path.of(challengeDir);
         this.className = className;
+        jvmArgs = new ArrayList<String>();
         if (Files.notExists(baseChallengeDir)) {
             try {
                 Files.createDirectories(baseChallengeDir);
@@ -31,9 +32,14 @@ public class JavaCompiler {
         }
     }
 
+    public String getLastOutput() {
+        return output.toString();
+    }
+
     // adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
-    public String compile(String code) {
+    public Boolean compile(String code) {
         output = new StringBuilder();
+        cleanTempDir();
         try {
             challengeDir = baseChallengeDir + "/" + Files.createTempDirectory(baseChallengeDir, null).getFileName();
 
@@ -43,9 +49,7 @@ public class JavaCompiler {
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(challengeDir)));
             //TODO: create dir if not there
-            Writer outputWriter = new StringWriter();
-
-            javax.tools.JavaCompiler.CompilationTask task = compiler.getTask(
+            CompilationTask compilationTask = compiler.getTask(
                     null,
                     fileManager,
                     diagnostics,
@@ -53,18 +57,8 @@ public class JavaCompiler {
                     null,
                     Arrays.asList(new JavaSourceFromString(className, code)));
             /********************************************************************************************* Compilation Requirements **/
-            if (task.call()) {
-                List<String> arguments = new ArrayList<>();
-
-                try {
-                    exec(className, new ArrayList<String>(), arguments);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                /************************************************************************************************* Load and execute **/
+            if (compilationTask.call()) {
+                return true;
             } else {
                 for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
                     String verboseErrorMsg =  diagnostic.toString();
@@ -74,22 +68,42 @@ public class JavaCompiler {
                 }
             }
             fileManager.close();
-            return outputWriter.toString();
         } catch (IOException e) {
-            return e.getMessage();
+            output.append(e.getMessage());
         }
-        finally { //TODO: if compile/run are split out, consider when to delete the temp dir
-            try {
-                FileSystemUtils.deleteRecursively(Path.of(challengeDir));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        return false;
+    }
+
+    private void cleanTempDir() {
+        try {
+            FileSystemUtils.deleteRecursively(Path.of(challengeDir));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    //TODO: private?
+    public Boolean runTests(Set<ChallengeTest> tests) {
+        for (ChallengeTest test : tests) {
+            runTest(test);
+            if (!output.equals(test.getExpectedOutput())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void runTest(ChallengeTest test) {
+        List<String> arguments = Arrays.asList(test.getInputArgs().split(","));
+        output.setLength(0);
+        try {
+            executeCode(className, arguments);
+        } catch (Exception e) {
+            output.append(e.getMessage());
+        }
+    }
+
     //adapted from https://dzone.com/articles/running-a-java-class-as-a-subprocess
-    public int exec(String className, List<String> jvmArgs, List<String> args) throws Exception {
+    private int executeCode(String className, List<String> args) throws Exception {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
         String classpath = new File(".").getCanonicalPath() + "/" + challengeDir + ";" + System.getProperty("java.class.path");
@@ -100,29 +114,26 @@ public class JavaCompiler {
         command.add(classpath);
         command.add(className);
         command.addAll(args);
-        ProcessBuilder builder = new ProcessBuilder(command);
-        Process process = builder
+        Process process = (new ProcessBuilder(command))
                 .redirectErrorStream(true)
                 .start();
         process.getOutputStream().close();
 
-        printLines(command + " stdout:", process.getInputStream());
-        printLines(command + " stderr:", process.getErrorStream());
-
-        process.waitFor();
-        return process.exitValue();
+        setStreamOutput(process.getInputStream(), output);
+        setStreamOutput(process.getErrorStream(), output);
+        return process.waitFor();
     }
 
     /**
-     * print lines out from an InputStream to a stringbuilder
+     * print lines out from an InputStream to a StringBuilder
      * adapted from code by Almas Baimagambetov
      */
-    private void printLines(String name, InputStream ins) {
+    private void setStreamOutput(InputStream ins, StringBuilder stringBuilder) {
         Thread t = new Thread(() -> {
             String line = null;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
                 while ((line = in.readLine()) != null) {
-                    output.append(line);
+                    stringBuilder.append(line);
                 }
             }
             catch (Exception e) { //TODO: do something with this
@@ -132,17 +143,11 @@ public class JavaCompiler {
         t.start();
     }
 
-    public String getLastOutput()
-    {
-        return output.toString();
-    }
-
-    //TODO: private?
     /**
      * A file object used to represent source coming from a string.
      * Taken from https://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html
      */
-    public class JavaSourceFromString extends SimpleJavaFileObject {
+    private class JavaSourceFromString extends SimpleJavaFileObject {
         /**
          * The source code of this "file".
          */
