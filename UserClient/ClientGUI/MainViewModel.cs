@@ -20,7 +20,7 @@ namespace ClientGUI
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
         public string UserCode { get => userCode; set => SetProperty(ref userCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
-        public IModel Model { get; private set; } = new RemoteModel();//TODO: pass in from App
+        public IModel Model { get; private set; } = new RemoteModel("http://localhost:59876/");//TODO: pass in from App
         public IChallenge CurrentChallenge { get => currentChallenge; private set => SetProperty(ref currentChallenge, value); }
         public bool AdminToolsEnabled { get; private set; }
         public List<IChallenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
@@ -123,7 +123,7 @@ namespace ClientGUI
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((sender, e) =>
                 {
-                    ChallengeStatus = Model.SubmitChallenge(CurrentChallenge.ChallengeID, UserCode).ResultString;
+                    ChallengeStatus = Model.ValidateChallenge(CurrentChallenge.ChallengeID, UserCode).ResultString;
                 }); //TODO: add proper completion dialog on success
                 //TODO: consider changing to a submit bool, with getLastResult thingy
                 worker.RunWorkerAsync();

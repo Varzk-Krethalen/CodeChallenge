@@ -4,5 +4,6 @@ namespace ClientModels
 {
     public class RemoteRanking : IRanking
     {
+
     }
 }
