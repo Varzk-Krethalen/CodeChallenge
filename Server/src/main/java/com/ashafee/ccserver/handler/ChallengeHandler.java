@@ -39,7 +39,7 @@ public class ChallengeHandler {
             if (result) AddNewCompletion(challenge, challengeSubmission.challengeCode);
         } catch (Exception e) {
             resultString = e.getMessage();
-        });
+        }
         return new ChallengeResult(resultString, result);
     }
 
