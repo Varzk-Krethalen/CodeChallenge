@@ -7,12 +7,13 @@ import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
 import java.io.*;
 import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 
-public class JavaCompiler {
+public class JavaCompiler implements AutoCloseable {
     private StringBuilder output = new StringBuilder();
     private final Path baseChallengeDir;
     private String challengeDir;
@@ -39,7 +40,6 @@ public class JavaCompiler {
     // adapted from https://stackoverflow.com/questions/21544446/how-do-you-dynamically-compile-and-load-external-java-classes
     public Boolean compile(String code) {
         output = new StringBuilder();
-        cleanTempDir();
         try {
             challengeDir = baseChallengeDir + "/" + Files.createTempDirectory(baseChallengeDir, null).getFileName();
 
@@ -74,18 +74,13 @@ public class JavaCompiler {
         return false;
     }
 
-    private void cleanTempDir() {
-        try {
-            FileSystemUtils.deleteRecursively(Path.of(challengeDir));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Boolean runTests(Set<ChallengeTest> tests) {
         for (ChallengeTest test : tests) {
             runTest(test);
-            if (!output.equals(test.getExpectedOutput())) {
+            if (!output.toString().equals(test.getExpectedOutput())) {
+                String inputs = test.getInputArgs().length() > 0 ? String.format("Input: %s, ", test.getInputArgs()) : "";
+                String result = inputs + "Expected: " + test.getExpectedOutput() + ", Got: " + output.toString();
+                output.replace(0, output.length(), result);
                 return false;
             }
         }
@@ -141,6 +136,17 @@ public class JavaCompiler {
             }
         });
         t.start();
+    }
+
+    @Override
+    public void close() {
+        try { //remove temp directory used
+            if (Files.exists(Path.of(challengeDir))){
+                FileSystemUtils.deleteRecursively(Path.of(challengeDir));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

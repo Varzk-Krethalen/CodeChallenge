@@ -57,7 +57,6 @@ namespace ClientGUI
         {
             if (SelectedChallenge != null)
             {
-                ChallengeStatus = "loading...";
                 CurrentChallenge = SelectedChallenge.GetCopy();
                 UserCode = CurrentChallenge.InitialCode;
                 return true;

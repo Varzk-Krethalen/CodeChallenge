@@ -1,8 +1,9 @@
 package com.ashafee.ccserver.handler.commsobjects;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@AllArgsConstructor
+@Data @AllArgsConstructor
 public class ChallengeResult {
     private String resultString;
     private boolean success;

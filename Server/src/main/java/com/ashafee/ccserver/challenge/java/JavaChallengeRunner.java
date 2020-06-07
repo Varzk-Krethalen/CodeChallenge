@@ -11,13 +11,14 @@ public class JavaChallengeRunner implements ChallengeRunner {
 
     @Override
     public Boolean challengeCodeValid(Challenge challenge, String code) {
-        JavaCompiler compiler = new JavaCompiler(challengeBuildDir, challengeClassName);
-        Boolean result = false;
-        if (compiler.compile(code)) {
-            result = compiler.runTests(challenge.getTests());
+        try (JavaCompiler compiler = new JavaCompiler(challengeBuildDir, challengeClassName)) {
+            Boolean result = false;
+            if (compiler.compile(code)) {
+                result = compiler.runTests(challenge.getTests());
+            }
+            output = compiler.getLastOutput();
+            return result;
         }
-        output = compiler.getLastOutput();
-        return result;
     }
 
     @Override
