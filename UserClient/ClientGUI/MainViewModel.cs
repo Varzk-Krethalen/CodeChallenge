@@ -115,17 +115,19 @@ namespace ClientGUI
             RefreshChallenges();
         }
 
-        public void SubmitChallenge()
+        public void SubmitChallenge(Action<bool> onComplete)
         {
             if (CurrentChallenge != null)
             {
                 ChallengeStatus = "updating...";
                 BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((sender, e) =>
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) => onComplete((bool)e.Result));
+                worker.DoWork += new DoWorkEventHandler(delegate(object sender, DoWorkEventArgs e)
                 {
-                    ChallengeStatus = Model.ValidateChallenge(CurrentChallenge.ChallengeID, UserCode).ResultString;
-                }); //TODO: add proper completion dialog on success
-                //TODO: consider changing to a submit bool, with getLastResult thingy
+                    IChallengeResult challengeResult = Model.ValidateChallenge(CurrentChallenge.ChallengeID, UserCode);
+                    ChallengeStatus = challengeResult.ResultString;
+                    e.Result = challengeResult.Success;
+                });
                 worker.RunWorkerAsync();
             }
         }

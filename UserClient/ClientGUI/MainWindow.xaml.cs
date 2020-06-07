@@ -66,7 +66,18 @@ namespace ClientGUI
 
         private void Submit_Challenge(object sender, RoutedEventArgs e)
         {
-            viewModel.SubmitChallenge();
+            viewModel.SubmitChallenge(OnChallengeSubmitted);
+        }
+
+        private void OnChallengeSubmitted(bool result)
+        {
+            if (result)
+            {
+                MessageBox.Show($"You have completed {viewModel.SelectedChallenge.Language} challenge {viewModel.SelectedChallenge.Name}!",
+                                $"Completion of challenge {viewModel.SelectedChallenge.ChallengeID}",
+                                MessageBoxButton.OK);
+                challengesListTab.IsSelected = true;
+            }
         }
 
         private void Log_Out(object sender, RoutedEventArgs e)
