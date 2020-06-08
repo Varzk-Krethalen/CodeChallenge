@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
+using AdonisUI;
 
 namespace ClientGUI
 {
@@ -11,6 +12,7 @@ namespace ClientGUI
             TextWrapping = TextWrapping.Wrap;
             AcceptsTab = true;
             AcceptsReturn = true;
+            ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.DarkColorScheme);
         }
 
         public int TabSize { get; set; } = 4;

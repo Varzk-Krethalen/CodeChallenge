@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:ClientGUI"
         mc:Ignorable="d"
         Title="Code Challenge Client" Loaded="Window_Loaded" Height="450" Width="800">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
@@ -60,7 +63,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Current Challenge" x:Name="currentChallengeTab">
-                <Grid ShowGridLines="True">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>

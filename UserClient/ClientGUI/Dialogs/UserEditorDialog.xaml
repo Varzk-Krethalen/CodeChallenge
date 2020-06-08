@@ -7,6 +7,9 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Title="User Editor" Height="300" Width="400">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
     <Control.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <ObjectDataProvider x:Key="userTypes" MethodName="GetValues"
