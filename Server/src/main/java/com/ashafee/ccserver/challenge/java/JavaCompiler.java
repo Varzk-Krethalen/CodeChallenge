@@ -51,7 +51,6 @@ public class JavaCompiler implements AutoCloseable {
             javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(challengeDir)));
-            //TODO: create dir if not there
             CompilationTask compilationTask = compiler.getTask(
                     null,
                     fileManager,
@@ -134,8 +133,8 @@ public class JavaCompiler implements AutoCloseable {
                     stringBuilder.append(line);
                 }
             }
-            catch (Exception e) { //TODO: do something with this
-//                Debug.trace(1, "Cannot open stream to Charon.jar: " + e.getMessage());
+            catch (Exception e) {
+                System.out.println(e);
             }
         });
         t.start();

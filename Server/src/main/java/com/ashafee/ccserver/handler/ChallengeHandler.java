@@ -86,5 +86,5 @@ public class ChallengeHandler {
     @DeleteMapping(value = "/delete")
     public boolean deleteChallenge(@RequestParam long challengeId) {
         return challengeAccessor.deleteEntity(challengeId);
-    }//TODO: remove results for the challenge
+    }
 }

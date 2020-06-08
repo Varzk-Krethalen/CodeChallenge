@@ -66,5 +66,5 @@ public class UserHandler {
     @DeleteMapping(value = "/delete")
     public boolean deleteUser(@RequestParam long userId) {
         return userAccessor.deleteEntity(userId);
-    }//TODO: remove results for the user
+    }
 }
