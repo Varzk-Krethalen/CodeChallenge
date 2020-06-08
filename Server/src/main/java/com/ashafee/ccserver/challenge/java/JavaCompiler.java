@@ -23,7 +23,10 @@ public class JavaCompiler implements AutoCloseable {
     public JavaCompiler(String challengeDir, String className) {
         baseChallengeDir = Path.of(challengeDir);
         this.className = className;
-        jvmArgs = new ArrayList<String>();
+        jvmArgs = new ArrayList<String>(Arrays.asList(
+                "-Djava.security.manager",
+                "-Djava.security.policy=policyFile.policy"
+        ));
         if (Files.notExists(baseChallengeDir)) {
             try {
                 Files.createDirectories(baseChallengeDir);
@@ -104,7 +107,7 @@ public class JavaCompiler implements AutoCloseable {
         String classpath = new File(".").getCanonicalPath() + "/" + challengeDir + ";" + System.getProperty("java.class.path");
         List<String> command = new ArrayList<>();
         command.add(javaBin);
-        command.addAll(jvmArgs); //TODO: File access restriction
+        command.addAll(jvmArgs);
         command.add("-cp");
         command.add(classpath);
         command.add(className);

@@ -14,6 +14,7 @@ public class ChallengeCompletion {
     private long resultID;
     private long challengeID;
     private long userID;
+    @Column(length = 5000)
     private String code;
     @Temporal(TemporalType.TIMESTAMP)
     private Date completionTimeStamp;

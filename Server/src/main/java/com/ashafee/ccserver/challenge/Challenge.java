@@ -14,6 +14,7 @@ public class Challenge {
     private long challengeID;
     private String name;
     private Language language;
+    @Column(length = 2000)
     private String initialCode;
     private String description;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
