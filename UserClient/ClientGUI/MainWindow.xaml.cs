@@ -42,8 +42,11 @@ namespace ClientGUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.RequestLogin())
+
+            LoginDialog loginWindow = new LoginDialog(ViewModel.Model);
+            if (loginWindow.ShowDialog() == true)
             {
+                ViewModel.Login(loginWindow.User);
                 SetVisibility(true);
             }
             else

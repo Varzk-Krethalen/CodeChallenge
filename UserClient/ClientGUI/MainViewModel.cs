@@ -44,19 +44,13 @@ namespace ClientGUI
 
         public MainViewModel(IModel model) => Model = model;
 
-        public bool RequestLogin()
+        public void Login(IUser user)
         {
-            LoginDialog loginWindow = new LoginDialog(Model);
-            if (loginWindow.ShowDialog() == true)
-            {
-                User = loginWindow.User;
-                AdminToolsEnabled = User.UserType == UserType.ADMIN;
-                RefreshChallenges();
-                RefreshUsers();
-                GetAllChallengeRanking();
-                return true;
-            }
-            return false;
+            User = user;
+            AdminToolsEnabled = User.UserType == UserType.ADMIN;
+            RefreshChallenges();
+            RefreshUsers();
+            GetAllChallengeRanking();
         }
 
         public void Logout() => Model.Logout();
