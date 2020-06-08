@@ -202,9 +202,7 @@ namespace ClientModels.RemoteModelObjects
         public bool DeleteChallenge(long challengeId) => DeleteById(challengeId, "challengeId", "challenge/delete");
 
         public IChallenge NewChallengeInstance() => new RemoteChallenge();
-        public IRanking NewRankingInstance() => new RemoteRanking();
         public ITest NewTestInstance() => new RemoteTest();
-        public IChallengeResult NewChallengeResultInstance() => new RemoteChallengeResult();
         public IUser NewUserInstance() => new RemoteUser();
     }
 }

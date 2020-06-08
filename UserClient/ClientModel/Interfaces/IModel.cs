@@ -25,9 +25,7 @@ namespace ClientModels.Interfaces
 
 
         IChallenge NewChallengeInstance();
-        IRanking NewRankingInstance(); //TODO: Remove
         ITest NewTestInstance();
-        IChallengeResult NewChallengeResultInstance(); //TODO: Remove
         IUser NewUserInstance();
     }
 }
