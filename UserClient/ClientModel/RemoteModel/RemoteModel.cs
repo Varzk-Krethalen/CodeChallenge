@@ -23,10 +23,21 @@ namespace ClientModels.RemoteModelObjects
         {
             RestRequest request = new RestRequest(uri, Method.POST);
             request.AddParameter("application/json", JsonConvert.SerializeObject(objectToSend), ParameterType.RequestBody);
-            IRestResponse response = Client.Execute(request);
-            return response;
+            return Client.Execute(request);
         }
 
+        private IRestResponse ExecuteMultiParamPOST(string uri, List<Parameter> parameters)
+        {
+            RestRequest request = new RestRequest(uri, Method.POST);
+            request.AddOrUpdateParameters(parameters);
+            return Client.Execute(request);
+        }
+
+        private bool AddOrUpdate(string uri, List<Parameter> parameters)
+        {
+            IRestResponse response = ExecuteMultiParamPOST(uri, parameters);
+            return response.IsSuccessful && bool.Parse(response.Content);
+        }
         private bool AddOrUpdate(string uri, object objectToSend)
         {
             IRestResponse response = ExecuteBasicPOST(uri, objectToSend);
@@ -47,14 +58,48 @@ namespace ClientModels.RemoteModelObjects
             throw new NotImplementedException();
         }
 
+        public List<IUser> GetUsers()
+        {
+            RestRequest request = new RestRequest("user/getAll");
+            IRestResponse response = Client.Get(request);
+            if (response.IsSuccessful)
+            {
+                var x = JsonConvert.DeserializeObject<List<RemoteUser>>(response.Content);
+                var y = x.Cast<IUser>();
+                return y.ToList();
+            }
+            return new List<IUser>();
+        }
+
         public bool ValidateUser(RemoteUser user)
         {
             throw new NotImplementedException();
         }
 
-        public bool AddUser(IUser user) => AddOrUpdate("user/add", user);
+        public bool AddUser(IUser user, string newPass)
+        {
+            RemoteUser remoteUser = user.GetCopy() as RemoteUser;
+            remoteUser.Password = newPass;
+            return AddOrUpdate("user/add", user);
+        }
 
-        public bool UpdateUser(IUser user) => AddOrUpdate("user/update", user);
+        public bool UpdateUserName(long userId, string name) => AddOrUpdate("user/updateName", new List<Parameter>()
+            {
+                new Parameter("userId", userId, ParameterType.GetOrPost),
+                new Parameter("userName", name, ParameterType.GetOrPost),
+            });
+
+        public bool UpdateUserPass(long userId, string pass) => AddOrUpdate("user/updatePass", new List<Parameter>()
+            {
+                new Parameter("userId", userId, ParameterType.GetOrPost),
+                new Parameter("userPass", pass, ParameterType.GetOrPost),
+            });
+
+        public bool UpdateUserType(long userId, UserType userType) => AddOrUpdate("user/updatType", new List<Parameter>()
+            {
+                new Parameter("userId", userId, ParameterType.GetOrPost),
+                new Parameter("userType", userType, ParameterType.GetOrPost),
+            });
 
         public bool DeleteUser(long userId) => DeleteById(userId, "userId", "user/delete");
 

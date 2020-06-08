@@ -10,7 +10,7 @@ import javax.persistence.Id;
 
 @Entity @Data @NoArgsConstructor
 public class User {
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
     private long userID;
     private String username;
     private String password;

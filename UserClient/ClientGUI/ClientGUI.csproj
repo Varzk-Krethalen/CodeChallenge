@@ -58,6 +58,9 @@
     <Compile Include="Dialogs\ChallengeEditorWindow.cs">
       <DependentUpon>ChallengeEditorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\UserEditorDialog.xaml.cs">
+      <DependentUpon>UserEditorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\CustomTextBox.cs" />
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
@@ -65,6 +68,10 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Utilities\ViewModelBase.cs" />
     <Page Include="Dialogs\ChallengeEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\UserEditorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

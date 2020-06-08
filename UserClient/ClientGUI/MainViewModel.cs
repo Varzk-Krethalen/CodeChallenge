@@ -1,4 +1,6 @@
-﻿using ClientModels.Interfaces;
+﻿using ClientModel.Interfaces;
+using ClientModels;
+using ClientModels.Interfaces;
 using ClientModels.RemoteModelObjects;
 using System;
 using System.Collections.Generic;
@@ -8,12 +10,15 @@ namespace ClientGUI
 {
     public class MainViewModel : ViewModelBase
     {
+        private const string modelCommsFailure = "Failed to communicate with server";
         private string userName;
         private string userCode;
         private string challengeStatus;
         private List<IChallenge> challengeList;
+        private List<IUser> userList;
         private IChallenge selectedChallenge;
         private string challengeDesc;
+        private string userState;
         private IChallenge currentChallenge;
 
         private string UserData { get; set; } //use a User object instead
@@ -23,7 +28,9 @@ namespace ClientGUI
         public IModel Model { get; private set; } = new RemoteModel("http://localhost:59876/");//TODO: pass in from App
         public IChallenge CurrentChallenge { get => currentChallenge; private set => SetProperty(ref currentChallenge, value); }
         public bool AdminToolsEnabled { get; private set; }
+        public bool EditingUser { get; private set; }
         public List<IChallenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
+        public List<IUser> UserList { get => userList; private set => SetProperty(ref userList, value); }
         public IChallenge SelectedChallenge
         {
             get => selectedChallenge; set
@@ -32,7 +39,10 @@ namespace ClientGUI
                 ChallengeDesc = $"{value.Name}:\r\n\r\n{value.Description}\r\n\r\nInitial Code:\r\n{value.InitialCode}";
             }
         }
+        public IUser SelectedUser { get; set; }
         public string ChallengeDesc { get => challengeDesc; private set => SetProperty(ref challengeDesc, value); }
+        public string UserState { get => userState; private set => SetProperty(ref userState, value); }
+        public string NewPassword { get; set; }
 
         public MainViewModel()
         {
@@ -64,6 +74,90 @@ namespace ClientGUI
             return false;
         }
 
+        public void RefreshUsers()
+        {
+            UserState = "Refreshing...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                UserList = Model.GetUsers();
+                UserState = (UserList.Count == 0) ? modelCommsFailure : "";
+            });
+            worker.RunWorkerAsync();
+        }
+
+        internal void AddUser(IUser user, string newPass)
+        {
+            UserState = "Adding User...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                if (Model.AddUser(user, newPass))
+                {
+                    RefreshUsers();
+                }
+                else
+                {
+                    UserState = modelCommsFailure;
+                }
+            });
+            worker.RunWorkerAsync();
+        }
+
+        internal void SaveUserName(long userId, string username)
+        {
+            UserState = "Updating...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                if (Model.UpdateUserName(userId, username))
+                {
+                    RefreshUsers();
+                }
+                else
+                {
+                    UserState = modelCommsFailure;
+                }
+            });
+            worker.RunWorkerAsync();
+        }
+
+        internal void SaveUserPass(long userId, string newPass)
+        {
+            UserState = "Updating...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                if (Model.UpdateUserPass(userId, newPass))
+                {
+                    RefreshUsers();
+                }
+                else
+                {
+                    UserState = modelCommsFailure;
+                }
+            });
+            worker.RunWorkerAsync();
+        }
+
+        internal void SaveUserType(long userId, UserType userType)
+        {
+            UserState = "Updating...";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                Model.UpdateUserType(userId, userType);
+                RefreshUsers();
+            });
+            worker.RunWorkerAsync();
+        }
+
+        internal void DeleteSelectedUser()
+        {
+            Model.DeleteUser(SelectedUser.UserID);
+            RefreshUsers();
+        }
+
         public void RefreshChallenges()
         {
             ChallengeDesc = "Refreshing...";
@@ -71,10 +165,7 @@ namespace ClientGUI
             worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
                 ChallengeList = Model.GetChallenges();
-                if (ChallengeList.Count == 0)
-                {
-                    ChallengeDesc = "Failed to communicate with server";
-                }
+                ChallengeDesc = (ChallengeList.Count == 0) ? modelCommsFailure : "";
             });
             worker.RunWorkerAsync();
         }
@@ -102,7 +193,7 @@ namespace ClientGUI
                 }
                 else
                 {
-                    ChallengeDesc = "Failed to communicate with server";
+                    ChallengeDesc = modelCommsFailure;
                 }
             });
             worker.RunWorkerAsync();

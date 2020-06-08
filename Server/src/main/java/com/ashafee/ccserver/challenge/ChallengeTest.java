@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity @Data @NoArgsConstructor
 public class ChallengeTest {
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
     private long testID;
     private String inputArgs;
     private String expectedOutput;

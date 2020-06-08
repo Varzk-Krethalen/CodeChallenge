@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientGUI.Dialogs;
+using ClientModel.Interfaces;
+using System;
 using System.Windows;
 
 namespace ClientGUI
@@ -43,7 +45,8 @@ namespace ClientGUI
             if (viewModel.RequestLogin())
             {
                 SetVisibility(true);
-                viewModel.RefreshChallenges();
+                viewModel.RefreshChallenges(); //TODO: move into the function on the viewmodel side
+                viewModel.RefreshUsers();
             }
             else
             {
@@ -112,6 +115,53 @@ namespace ClientGUI
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     viewModel.DeleteSelectedChallenge();
+                }
+            }
+        }
+
+        private void Refresh_Users(object sender, RoutedEventArgs e)
+        {
+            viewModel.RefreshUsers();
+        }
+
+        private void Add_User(object sender, RoutedEventArgs e)
+        {
+            UserEditorDialog userEditor = new UserEditorDialog(viewModel.Model); //TODO: view shouldn't know about model
+            if (userEditor.ShowDialog() == true)
+            {
+                viewModel.AddUser(userEditor.User, userEditor.NewPassword);
+            }
+        }
+
+        private void Edit_User(object sender, RoutedEventArgs e)
+        {
+            UserEditorDialog userEditor = new UserEditorDialog(viewModel.Model, viewModel.SelectedUser); //TODO: view shouldn't know about model
+            if (userEditor.ShowDialog() == true)
+            {
+                IUser user = userEditor.User;
+                switch (userEditor.EditedField)
+                {
+                    case UserEditorDialog.UserField.NAME:
+                        viewModel.SaveUserName(user.UserID, user.Username);
+                        break;
+                    case UserEditorDialog.UserField.PASS:
+                        viewModel.SaveUserPass(user.UserID, userEditor.NewPassword);
+                        break;
+                    case UserEditorDialog.UserField.TYPE:
+                        viewModel.SaveUserType(user.UserID, user.UserType);
+                        break;
+                }
+            }
+        }
+
+        private void Delete_User(object sender, RoutedEventArgs e)
+        {
+            if (viewModel.SelectedUser != null)
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete User: {viewModel.SelectedUser.Username}", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    viewModel.DeleteSelectedUser();
                 }
             }
         }

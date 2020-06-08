@@ -7,9 +7,12 @@ namespace ClientModels.Interfaces
     public interface IModel
     {
         IUser GetUser(long userId);
+        List<IUser> GetUsers();
         bool ValidateUser(RemoteUser user);
-        bool AddUser(IUser user);
-        bool UpdateUser(IUser user);
+        bool AddUser(IUser user, string newPass);
+        bool UpdateUserName(long userId, string name);
+        bool UpdateUserPass(long userId, string pass);
+        bool UpdateUserType(long userId, UserType userType);
         bool DeleteUser(long userId);
 
         List<IRanking> GetRanking(long rankingId);
@@ -25,9 +28,9 @@ namespace ClientModels.Interfaces
 
 
         IChallenge NewChallengeInstance();
-        IRanking NewRankingInstance();
+        IRanking NewRankingInstance(); //TODO: Remove
         ITest NewTestInstance();
-        IChallengeResult NewChallengeResultInstance();
+        IChallengeResult NewChallengeResultInstance(); //TODO: Remove
         IUser NewUserInstance();
     }
 }

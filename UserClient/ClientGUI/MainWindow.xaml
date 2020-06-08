@@ -44,7 +44,7 @@
                     </ListView>
                     <TextBlock Text="{Binding ChallengeDesc}" Grid.Row="0" Grid.Column="1"/>
                     <UniformGrid Grid.Row="1" Grid.Column="0" Rows="1">
-                        <Button x:Name="refresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Challenges"/>
+                        <Button x:Name="challengeRefresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Challenges"/>
                         <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
                     </UniformGrid>
                     <UniformGrid Grid.Row="1" Grid.Column="2" Rows="1">
@@ -67,12 +67,33 @@
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
-                            <RowDefinition Height="8*"/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="4*"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         <TextBlock x:Name="challengeTitle" Text="{Binding CurrentChallenge.Name}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
                         <TextBlock x:Name="challengeDesc" Text="{Binding CurrentChallenge.Description}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
-                        <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Click="Submit_Challenge"/>
+                        <ListView x:Name="testList" ItemsSource="{Binding CurrentChallenge.Tests}" Width="auto" Grid.Row="2">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Inputs">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding InputArgs}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Expected Output">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ExpectedOutput}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Click="Submit_Challenge"/>
                         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,1"/>
                     </Grid> <!--list the tests under description?-->
                     <Grid Grid.Column="1">
@@ -88,31 +109,53 @@
                 </Grid>
             </TabItem>
             <TabItem Header="User Ranking">
-                retrieve generated ranking list. Just center it.
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="8*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Rankings"/>
+                    <ListView ItemsSource="{Binding Path=Rankings}" SelectedItem="{Binding Path=SelectedUser}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="UserId" DisplayMemberBinding="{Binding UserID}"/>
+                                <GridViewColumn Header="Username" DisplayMemberBinding="{Binding Username}"/>
+                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding UserType}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                <!--retrieve generated ranking list. Just center it.
                 list of ranked users - top 20? In second pane, do what?
                 or just single pane?
-                description of ranking? options to narrow (e.g. by challenge id)
+                description of ranking? options to narrow (e.g. by challenge id)-->
+                </Grid>
             </TabItem>
             <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
                 <!--add/remove/edit users-->
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="9*"/>
+                        <RowDefinition Height="8*"/>
+                        <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2">
-                        <!--Add a gridsplitter bit-->
+                    <ListView ItemsSource="{Binding Path=UserList}" SelectedItem="{Binding Path=SelectedUser}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True" Grid.Row="0">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="User"/>
-                                <GridViewColumn Header="Type"/>
+                                <GridViewColumn Header="UserId" DisplayMemberBinding="{Binding UserID}"/>
+                                <GridViewColumn Header="Username" DisplayMemberBinding="{Binding Username}"/>
+                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding UserType}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <UniformGrid Grid.Row="1" Rows="1">
+                        <Button x:Name="userRefresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Users"/>
+                        <Button Content="Add User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Add_User"/>
+                        <Button Content="Edit User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Edit_User"/>
+                        <Button Content="Delete User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Delete_User"/>
+                    </UniformGrid>
+                    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,1"/>
+                    <TextBlock Text="{Binding UserState}"  Grid.Row="2"/>
                 </Grid>
             </TabItem>
         </TabControl>

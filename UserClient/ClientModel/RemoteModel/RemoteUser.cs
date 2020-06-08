@@ -16,6 +16,11 @@ namespace ClientModels.RemoteModelObjects
 
         [JsonProperty("userType")]
         public UserType UserType { get; set; }
+
+        public IUser GetCopy()
+        {
+            return new RemoteUser() { UserID = UserID, Username = Username, UserType = UserType };
+        }
     }
 
 
