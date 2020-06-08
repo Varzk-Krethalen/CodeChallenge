@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ClientModels.Interfaces;
+using System.Windows;
 
 namespace ClientGUI
 {
@@ -7,18 +8,32 @@ namespace ClientGUI
     /// </summary>
     public partial class LoginDialog : Window
     {
-        public string UserData { get; set; }
+        public IUser User { get; set; }
+        public string Username { get; set; }
+        public string Pass { get; set; }
+        public IModel Model { get; }
 
-        public LoginDialog()
+        public LoginDialog(IModel model)
         {
             InitializeComponent();
+            Model = model;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            UserData = usernameBox.Text + ", " + passwordBox.Password;
-            DialogResult = true;
-            Close();
+            Username = usernameBox.Text;
+            Pass = passwordBox.Password;
+
+            if (Model.ValidateUser(Username, Pass, out IUser user))
+            {
+                User = user;
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                errormessage.Text = "Invalid User Details";
+            }
         }
     }
 }

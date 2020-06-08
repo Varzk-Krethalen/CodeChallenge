@@ -1,9 +1,11 @@
 ﻿using ClientModels.Interfaces;
 using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Management;
 
 namespace ClientModels.RemoteModelObjects
 {
@@ -15,13 +17,21 @@ namespace ClientModels.RemoteModelObjects
         public RemoteModel(string baseUri)
         {
             BaseUri = baseUri;
-            Client = new RestClient(baseUri);
+            NewClient();
+        }
+
+        private void NewClient()
+        {
+            Client = new RestClient(BaseUri);
         }
 
         private IRestResponse ExecuteBasicPOST(string uri, object objectToSend)
         {
             RestRequest request = new RestRequest(uri, Method.POST);
-            request.AddParameter("application/json", JsonConvert.SerializeObject(objectToSend), ParameterType.RequestBody);
+            if (objectToSend != null)
+            {
+                request.AddParameter("application/json", JsonConvert.SerializeObject(objectToSend), ParameterType.RequestBody);
+            }
             return Client.Execute(request);
         }
 
@@ -65,16 +75,49 @@ namespace ClientModels.RemoteModelObjects
             return new List<IUser>();
         }
 
-        public bool ValidateUser(RemoteUser user)
+        public bool ValidateUser(string username, string password, out IUser user)
         {
-            throw new NotImplementedException();
+            user = null;
+            Client.Authenticator = new HttpBasicAuthenticator(username, password);
+            RestRequest request = new RestRequest("auth/true");
+            if (bool.TryParse(Client.Get(request).Content, out bool success))
+            {
+                if (success)
+                {
+                    if (GetUserByName(username, out IUser retrievedUser))
+                    {
+                        user = retrievedUser;
+                        return true;
+                    }
+                }    
+            }
+            return false;
+        }
+
+        private bool GetUserByName(string username, out IUser user)
+        {
+            user = null;
+            RestRequest request = new RestRequest("user/getByName");
+            request.AddParameter(new Parameter("userName", username, ParameterType.GetOrPost));
+            IRestResponse response = Client.Get(request);
+            if (response.IsSuccessful)
+            {
+                user = JsonConvert.DeserializeObject<RemoteUser>(response.Content);
+            }
+            return response.IsSuccessful;
+        }
+
+        public void Logout()
+        {
+            ExecuteBasicPOST("auth/logout", null);
+            NewClient();
         }
 
         public bool AddUser(IUser user, string newPass)
         {
             RemoteUser remoteUser = user.GetCopy() as RemoteUser;
             remoteUser.Password = newPass;
-            return AddOrUpdate("user/add", user);
+            return AddOrUpdate("user/add", remoteUser);
         }
 
         public bool UpdateUserName(long userId, string name) => AddOrUpdate("user/updateName", new List<Parameter>()

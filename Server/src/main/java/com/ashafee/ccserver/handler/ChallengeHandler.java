@@ -5,8 +5,12 @@ import com.ashafee.ccserver.handler.commsobjects.ChallengeResult;
 import com.ashafee.ccserver.handler.commsobjects.ChallengeSubmission;
 import com.ashafee.ccserver.storage.ChallengeRepository;
 import com.ashafee.ccserver.storage.CompletionRepository;
+import com.ashafee.ccserver.storage.UserRepository;
+import com.ashafee.ccserver.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -19,6 +23,8 @@ public class ChallengeHandler {
     ChallengeRepository challengeAccessor;
     @Autowired
     CompletionRepository completionAccessor;
+    @Autowired
+    UserRepository userAccessor;
 
     @GetMapping("/getAll")
     public List<Challenge> getChallenges() {
@@ -46,10 +52,21 @@ public class ChallengeHandler {
     private void AddNewCompletion(Challenge challenge, String code) {
         ChallengeCompletion completion = new ChallengeCompletion();
         completion.setChallengeID(challenge.getChallengeID());
-        //TODO: Set user ID
+        completion.setUserID(getCurrentUser().getUserID());
         completion.setCode(code);
         completion.setCompletionTimeStamp(new Date());
         completionAccessor.save(completion);
+    }
+
+    private User getCurrentUser() {
+        String username;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        return userAccessor.findByUsername(username);
     }
 
     @PostMapping(value = "/add")

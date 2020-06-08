@@ -13,9 +13,15 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
     <Grid>
-        <Button Content="Log Out" HorizontalAlignment="Right" Margin="0,1,2,0" VerticalAlignment="Top" Width="104" Click="Log_Out"/>
-        <TextBlock x:Name="textblock" Text="{Binding UserName}" Width="auto" FontSize="14" HorizontalAlignment="Right" Margin="0,1,108,0" VerticalAlignment="Top" />
-        <!--click on name should bring to settings?--> 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,1,2,0" Panel.ZIndex="1">
+            <TextBlock Text="{Binding User.UserType}" FontSize="14"/>
+            <TextBlock Text=" " FontSize="14"/>
+            <TextBlock Text="{Binding User.UserID}" FontSize="14"/>
+            <TextBlock Text=", " FontSize="14"/>
+            <TextBlock Text="{Binding User.Username}" Margin="0,0,10,0" FontSize="14" />
+            <Button Content="Log Out" Margin="1,1,1,1" Width="104" Click="Log_Out"/>
+        </StackPanel>
+
         <TabControl x:Name="tabControl">
             <TabItem Header="Challenges" Name="challengesListTab">
                 <Grid>
@@ -28,7 +34,6 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <ListView Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Path=ChallengeList}" SelectedItem="{Binding Path=SelectedChallenge}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True">
-                        <!--Add a gridsplitter bit-->
                         <ListView.Resources>
                             <Style TargetType="{x:Type GridViewColumnHeader}">
                                 <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -53,13 +58,12 @@
                         <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
                     </UniformGrid>
                     <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
-                    <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,1,1,1" Height="391" VerticalAlignment="Bottom"/>
                     <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
                     <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0,1,1,1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Current Challenge" x:Name="currentChallengeTab">
-                <Grid ShowGridLines="True"><!--will need border per cell, or at least for some-->
+                <Grid ShowGridLines="True">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>
@@ -134,14 +138,9 @@
                         <TextBox x:Name="rankingUserID" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                         <Button Content="Get Ranking" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Click="Get_User_Ranking"/>
                     </UniformGrid>
-                <!--retrieve generated ranking list. Just center it.
-                list of ranked users - top 20? In second pane, do what?
-                or just single pane?
-                description of ranking? options to narrow (e.g. by challenge id)-->
                 </Grid>
             </TabItem>
             <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
-                <!--add/remove/edit users-->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="8*"/>

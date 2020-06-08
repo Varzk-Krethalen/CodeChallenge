@@ -10,7 +10,7 @@ namespace ClientGUI
     public class MainViewModel : ViewModelBase
     {
         private const string modelCommsFailure = "Failed to communicate with server";
-        private string userName;
+        private IUser user;
         private string userCode;
         private string challengeStatus;
         private List<IChallenge> challengeList;
@@ -20,14 +20,14 @@ namespace ClientGUI
         private string userState;
         private IChallenge currentChallenge;
         private IRanking rankings;
+        private bool adminToolsEnabled;
 
-        private string UserData { get; set; } //use a User object instead
-        public string UserName { get => userName; set => SetProperty(ref userName, value); }
+        public IUser User { get => user; set => SetProperty(ref user, value); }
         public string UserCode { get => userCode; set => SetProperty(ref userCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
         public IModel Model { get; private set; } = new RemoteModel("http://localhost:59876/");//TODO: pass in from App
         public IChallenge CurrentChallenge { get => currentChallenge; private set => SetProperty(ref currentChallenge, value); }
-        public bool AdminToolsEnabled { get; private set; }
+        public bool AdminToolsEnabled { get => adminToolsEnabled; private set => SetProperty(ref adminToolsEnabled, value); }
         public bool EditingUser { get; private set; }
         public List<IChallenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
         public List<IUser> UserList { get => userList; private set => SetProperty(ref userList, value); }
@@ -54,14 +54,19 @@ namespace ClientGUI
 
         public bool RequestLogin()
         {
-            LoginDialog loginWindow = new LoginDialog();
+            LoginDialog loginWindow = new LoginDialog(Model);
             if (loginWindow.ShowDialog() == true)
             {
-                UserData = loginWindow.UserData;
-                UserName = $"{UserData.Split(',')[0]}";
-                return true; //TODO: proper validation via model
+                User = loginWindow.User;
+                AdminToolsEnabled = User.UserType == UserType.ADMIN;
+                return true;
             }
             return false;
+        }
+
+        public void Logout()
+        {
+            Model.Logout();
         }
 
         public bool LoadSelectedChallenge()
@@ -213,7 +218,7 @@ namespace ClientGUI
                 ChallengeStatus = "updating...";
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((sender, e) => onComplete((bool)e.Result));
-                worker.DoWork += new DoWorkEventHandler(delegate(object sender, DoWorkEventArgs e)
+                worker.DoWork += new DoWorkEventHandler(delegate (object sender, DoWorkEventArgs e)
                 {
                     IChallengeResult challengeResult = Model.ValidateChallenge(CurrentChallenge.ChallengeID, UserCode);
                     ChallengeStatus = challengeResult.ResultString;

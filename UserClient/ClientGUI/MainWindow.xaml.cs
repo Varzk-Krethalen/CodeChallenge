@@ -84,7 +84,8 @@ namespace ClientGUI
 
         private void Log_Out(object sender, RoutedEventArgs e)
         {
-            //TODO: Add logout system.
+            viewModel.Logout();
+            Close();
         }
 
         private void Add_Challenge(object sender, RoutedEventArgs e)

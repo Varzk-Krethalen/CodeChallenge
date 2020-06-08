@@ -13,11 +13,19 @@ namespace ClientGUI
         public IChallenge Challenge { get; }
         public bool IsNewChallenge { get; } = true;
 
+        private static string defaultJavaCode = 
+@"public class Challenge {
+    public static void main(String[] args) {
+          
+    }
+}";
+
         public ChallengeEditorDialog(IModel model)
         {
             InitializeComponent();
             Model = model;
             Challenge = Model.NewChallengeInstance();
+            Challenge.InitialCode = defaultJavaCode;
             DataContext = this;
             TestListView_SizeChanged(TestList, null);
             TestList.Items.Refresh();

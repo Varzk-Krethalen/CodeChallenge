@@ -6,7 +6,8 @@ namespace ClientModels.Interfaces
     public interface IModel
     {
         List<IUser> GetUsers();
-        bool ValidateUser(RemoteUser user);
+        bool ValidateUser(string username, string password, out IUser user);
+        void Logout();
         bool AddUser(IUser user, string newPass);
         bool UpdateUserName(long userId, string name);
         bool UpdateUserPass(long userId, string pass);

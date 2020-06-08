@@ -1,8 +1,8 @@
 package com.ashafee.ccserver.auth;
 
 import com.ashafee.ccserver.storage.UserRepository;
-import com.ashafee.ccserver.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,11 +15,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userAccessor.findByUsername(username);
+        com.ashafee.ccserver.user.User user = userAccessor.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new MyUserPrincipal(user);
+        return toUserDetails(user);
+    }
+
+    private UserDetails toUserDetails(com.ashafee.ccserver.user.User userObject) {
+        return User.withUsername(userObject.getUsername())
+                .password(userObject.getPassword())
+                .roles(userObject.getUserType().toString()).build();
     }
 }
 

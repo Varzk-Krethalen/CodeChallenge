@@ -4,6 +4,7 @@ import com.ashafee.ccserver.storage.UserRepository;
 import com.ashafee.ccserver.user.User;
 import com.ashafee.ccserver.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -15,15 +16,23 @@ import java.util.function.Consumer;
 public class UserHandler {
     @Autowired
     UserRepository userAccessor;
+    @Autowired
+    public BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/getAll")
     public List<User> getUsers() {
         return userAccessor.findAll();
     }
 
+    @GetMapping("/getByName")
+    public User getUserByName(@RequestParam String userName) {
+        return userAccessor.findByUsername(userName);
+    }
+
     @PostMapping(value = "/add")
     public boolean addUser(@RequestBody User user) {
         user.setUserID(0);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userAccessor.save(user);
         return savedUser.getUserID() != 0;
     }
@@ -35,7 +44,7 @@ public class UserHandler {
 
     @PostMapping(value = "/updatePass")
     public boolean updateUserPass(@RequestParam long userId, @RequestParam String userPass) {
-        return updateUser(userId, user -> user.setPassword(userPass));
+        return updateUser(userId, user -> user.setPassword(passwordEncoder.encode(userPass)));
     }
 
     @PostMapping(value = "/updateType")

@@ -1,44 +1,44 @@
 package com.ashafee.ccserver.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
-//adapted from https://mkyong.com/spring-boot/spring-rest-spring-security-example/
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private AuthenticationEntryPoint authEntryPoint;
 
-    // Create 2 users for demo
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-    }
-
-    // Secure the endpoints with HTTP Basic authentication
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            //HTTP Basic authentication
-            .httpBasic()
-            .and()
-            .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/**/get*").hasRole("USER")
-            .antMatchers(HttpMethod.POST, "/**/submit").hasRole("USER")
-            .antMatchers(HttpMethod.POST, "/**/add*").hasRole("ADMIN")
-            .antMatchers(HttpMethod.POST, "/**/update*").hasRole("ADMIN")
-            .antMatchers(HttpMethod.DELETE, "/**/delete*").hasRole("ADMIN")
-            .antMatchers(HttpMethod.GET, "/**/**").hasRole("ADMIN")
-            .antMatchers(HttpMethod.POST, "/**/**").hasRole("ADMIN")
-            .antMatchers(HttpMethod.PUT, "/**/**").hasRole("ADMIN")
-            .antMatchers(HttpMethod.PATCH, "/**/**").hasRole("ADMIN")
-            .antMatchers(HttpMethod.DELETE, "/**/**").hasRole("ADMIN")
-            .and()
-            .csrf().disable()
-            .formLogin().disable();
+        http.csrf().disable().authorizeRequests()
+                .antMatchers("/**/add*", "/**/update*", "/**/delete*").hasRole("ADMIN")
+                .antMatchers("/**/get*", "/ranking/**").authenticated()
+                .antMatchers("/auth/**").permitAll()
+            .and().httpBasic().realmName("test").authenticationEntryPoint(authEntryPoint)
+            .and().logout()
+                .deleteCookies("remove")
+                .invalidateHttpSession(true)
+                .logoutUrl("/auth/logout")
+                .permitAll()
+            .and().formLogin().disable();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder;
+    }
+
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
 }
