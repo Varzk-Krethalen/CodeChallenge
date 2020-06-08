@@ -1,5 +1,4 @@
-﻿using ClientModel.Interfaces;
-using ClientModels.RemoteModelObjects;
+﻿using ClientModels.RemoteModelObjects;
 using System.Collections.Generic;
 
 namespace ClientModels.Interfaces
@@ -15,9 +14,8 @@ namespace ClientModels.Interfaces
         bool UpdateUserType(long userId, UserType userType);
         bool DeleteUser(long userId);
 
-        List<IRanking> GetRanking(long rankingId);
-
-        List<IRanking> GetRankings();
+        IRanking GetAllChallengeRanking();
+        IRanking GetRanking(long challengeID);
 
         IChallenge GetChallenge(long challengeId);
         List<IChallenge> GetChallenges();

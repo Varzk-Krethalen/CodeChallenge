@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface CompletionRepository extends GenericRepository<ChallengeCompletion> {
-
+    int countByUserID(long userID);
+    int countByUserIDAndChallengeID(long userID, long challengeID);
 }
 

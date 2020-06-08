@@ -1,6 +1,6 @@
 ﻿using ClientGUI.Dialogs;
-using ClientModel.Interfaces;
-using System;
+using ClientModels.Interfaces;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace ClientGUI
@@ -47,6 +47,7 @@ namespace ClientGUI
                 SetVisibility(true);
                 viewModel.RefreshChallenges(); //TODO: move into the function on the viewmodel side
                 viewModel.RefreshUsers();
+                viewModel.GetAllChallengeRanking();
             }
             else
             {
@@ -164,6 +165,26 @@ namespace ClientGUI
                     viewModel.DeleteSelectedUser();
                 }
             }
+        }
+
+        private void Get_Ranking(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(rankingChallengeID.Text))
+            {
+                viewModel.GetAllChallengeRanking();
+            }
+            else
+            {
+                viewModel.GetRanking(long.Parse(rankingChallengeID.Text));
+            }
+        }
+
+        
+
+        private void TextBlock_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

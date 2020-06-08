@@ -1,8 +1,5 @@
 ﻿
-
-using ClientModels;
-
-namespace ClientModel.Interfaces
+namespace ClientModels.Interfaces
 {
     public interface IUser
     {

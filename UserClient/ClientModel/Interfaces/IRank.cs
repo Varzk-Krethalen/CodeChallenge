@@ -1,6 +1,4 @@
-﻿using ClientModel.Interfaces;
-
-namespace ClientModels.Interfaces
+﻿namespace ClientModels.Interfaces
 {
     public interface IRank
     {

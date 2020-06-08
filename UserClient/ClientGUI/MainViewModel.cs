@@ -1,5 +1,4 @@
-﻿using ClientModel.Interfaces;
-using ClientModels;
+﻿using ClientModels;
 using ClientModels.Interfaces;
 using ClientModels.RemoteModelObjects;
 using System;
@@ -20,6 +19,7 @@ namespace ClientGUI
         private string challengeDesc;
         private string userState;
         private IChallenge currentChallenge;
+        private IRanking rankings;
 
         private string UserData { get; set; } //use a User object instead
         public string UserName { get => userName; set => SetProperty(ref userName, value); }
@@ -43,6 +43,7 @@ namespace ClientGUI
         public string ChallengeDesc { get => challengeDesc; private set => SetProperty(ref challengeDesc, value); }
         public string UserState { get => userState; private set => SetProperty(ref userState, value); }
         public string NewPassword { get; set; }
+        public IRanking Rankings { get => rankings; set => SetProperty(ref rankings, value); }
 
         public MainViewModel()
         {
@@ -220,6 +221,26 @@ namespace ClientGUI
                 });
                 worker.RunWorkerAsync();
             }
+        }
+
+        public void GetAllChallengeRanking()
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                Rankings = Model.GetAllChallengeRanking();
+            });
+            worker.RunWorkerAsync();
+        }
+
+        public void GetRanking(long challengeID)
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                Rankings = Model.GetRanking(challengeID);
+            });
+            worker.RunWorkerAsync();
         }
     }
 }

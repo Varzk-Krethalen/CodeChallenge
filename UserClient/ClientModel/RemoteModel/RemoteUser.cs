@@ -1,4 +1,4 @@
-﻿using ClientModel.Interfaces;
+﻿using ClientModels.Interfaces;
 using Newtonsoft.Json;
 
 namespace ClientModels.RemoteModelObjects

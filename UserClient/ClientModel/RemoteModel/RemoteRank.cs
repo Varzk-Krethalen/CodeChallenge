@@ -1,5 +1,5 @@
-﻿using ClientModel.Interfaces;
-using ClientModels.Interfaces;
+﻿using ClientModels.Interfaces;
+using ClientModels.RemoteModelObjects;
 using Newtonsoft.Json;
 
 namespace ClientModels
@@ -9,8 +9,8 @@ namespace ClientModels
         [JsonProperty("rank")]
         public int Rank { get; set; }
 
-        [JsonProperty("user")]
-        public IUser User { get; }
+        [JsonProperty("user"), JsonConverter(typeof(JsonConcreteConverter<IUser, RemoteUser>))]
+        public IUser User { get; set; }
 
         [JsonProperty("challengesCompleted")]
         public int ChallengesCompleted { get; set; }

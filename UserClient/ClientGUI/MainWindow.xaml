@@ -115,16 +115,22 @@
                         <RowDefinition Height="8*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Rankings"/>
-                    <ListView ItemsSource="{Binding Path=Rankings}" SelectedItem="{Binding Path=SelectedUser}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True" Grid.Row="1">
+                    <TextBlock Text="{Binding Rankings.RankingName}"/>
+                    <ListView ItemsSource="{Binding Path=Rankings.Ranks}" Grid.Row="1">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="UserId" DisplayMemberBinding="{Binding UserID}"/>
-                                <GridViewColumn Header="Username" DisplayMemberBinding="{Binding Username}"/>
-                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding UserType}"/>
+                                <GridViewColumn Header="Rank" DisplayMemberBinding="{Binding Rank}"/>
+                                <GridViewColumn Header="UserId" DisplayMemberBinding="{Binding User.UserID}"/>
+                                <GridViewColumn Header="Username" DisplayMemberBinding="{Binding User.Username}"/>
+                                <GridViewColumn Header="Challenges Completed" DisplayMemberBinding="{Binding ChallengesCompleted}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <UniformGrid Grid.Row="2" Columns="3">
+                        <TextBlock Text="Get Rankings by Challenge ID, or leave blank for all challenges"  TextWrapping="WrapWithOverflow" PreviewTextInput="TextBlock_PreviewTextInput"/>
+                        <TextBox x:Name="rankingChallengeID" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        <Button Content="Get Ranking" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Click="Get_Ranking"/>
+                    </UniformGrid>
                 <!--retrieve generated ranking list. Just center it.
                 list of ranked users - top 20? In second pane, do what?
                 or just single pane?

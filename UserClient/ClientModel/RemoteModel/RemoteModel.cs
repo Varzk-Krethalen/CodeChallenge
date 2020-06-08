@@ -1,5 +1,4 @@
-﻿using ClientModel.Interfaces;
-using ClientModels.Interfaces;
+﻿using ClientModels.Interfaces;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -104,14 +103,27 @@ namespace ClientModels.RemoteModelObjects
         public bool DeleteUser(long userId) => DeleteById(userId, "userId", "user/delete");
 
 
-        public List<IRanking> GetRanking(long rankingId)
+        public IRanking GetAllChallengeRanking()
         {
-            throw new NotImplementedException();
+            RestRequest request = new RestRequest("ranking/all");
+            IRestResponse response = Client.Get(request);
+            if (response.IsSuccessful)
+            {
+                return JsonConvert.DeserializeObject<RemoteRanking>(response.Content);
+            }
+            return new RemoteRanking();
         }
 
-        public List<IRanking> GetRankings()
+        public IRanking GetRanking(long challengeID)
         {
-            throw new NotImplementedException();
+            RestRequest request = new RestRequest("ranking/challenge");
+            request.AddParameter("challengeId", challengeID, ParameterType.GetOrPost);
+            IRestResponse response = Client.Get(request);
+            if (response.IsSuccessful)
+            {
+                return JsonConvert.DeserializeObject<RemoteRanking>(response.Content);
+            }
+            return new RemoteRanking();
         }
 
 
