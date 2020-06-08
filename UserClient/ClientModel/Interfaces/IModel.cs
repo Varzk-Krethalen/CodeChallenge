@@ -5,7 +5,6 @@ namespace ClientModels.Interfaces
 {
     public interface IModel
     {
-        IUser GetUser(long userId);
         List<IUser> GetUsers();
         bool ValidateUser(RemoteUser user);
         bool AddUser(IUser user, string newPass);
@@ -15,9 +14,9 @@ namespace ClientModels.Interfaces
         bool DeleteUser(long userId);
 
         IRanking GetAllChallengeRanking();
-        IRanking GetRanking(long challengeID);
+        IRanking GetRankingByChallenge(long challengeID);
+        IRanking GetRankingByUser(long userID);
 
-        IChallenge GetChallenge(long challengeId);
         List<IChallenge> GetChallenges();
         IChallengeResult ValidateChallenge(long challengeId, string challengeCode);
         bool AddChallenge(IChallenge challenge);

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor
 public class Rank {
     private int rank;
-    private User user;
+    private long objectID;
+    private String objectName;
     private Integer challengesCompleted;
 }

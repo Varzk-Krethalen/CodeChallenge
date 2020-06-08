@@ -1,7 +1,9 @@
 package com.ashafee.ccserver.handler;
 
+import com.ashafee.ccserver.challenge.Challenge;
 import com.ashafee.ccserver.ranking.Rank;
 import com.ashafee.ccserver.ranking.Ranking;
+import com.ashafee.ccserver.storage.ChallengeRepository;
 import com.ashafee.ccserver.storage.CompletionRepository;
 import com.ashafee.ccserver.storage.GenericRepository;
 import com.ashafee.ccserver.storage.UserRepository;
@@ -24,17 +26,19 @@ public class RankingHandler {
     UserRepository userAccessor;
     @Autowired
     CompletionRepository completionAccessor;
+    @Autowired
+    ChallengeRepository challengeAccessor;
 
-
-    @GetMapping("/all")
-    public Ranking getRanking() {
+    @GetMapping("/allChallenges")
+    public Ranking getRankingForAllChallenges() {
         List<Rank> ranks = new ArrayList<Rank>();
         for (User user : userAccessor.findAll()) {
             Rank rank = new Rank();
             rank.setChallengesCompleted(completionAccessor.countByUserID(user.getUserID()));
             if (rank.getChallengesCompleted() > 0)
             {
-                rank.setUser(user);
+                rank.setObjectID(user.getUserID());
+                rank.setObjectName(user.getUsername());
                 ranks.add(rank);
             }
         }
@@ -46,14 +50,15 @@ public class RankingHandler {
     }
 
     @GetMapping("/challenge")
-    public Ranking getRanking(@RequestParam long challengeId) {
+    public Ranking getRankingByChallenge(@RequestParam long challengeId) {
         List<Rank> ranks = new ArrayList<Rank>();
         for (User user : userAccessor.findAll()) {
             Rank rank = new Rank();
             rank.setChallengesCompleted(completionAccessor.countByUserIDAndChallengeID(user.getUserID(), challengeId));
             if (rank.getChallengesCompleted() > 0)
             {
-                rank.setUser(user);
+                rank.setObjectID(user.getUserID());
+                rank.setObjectName(user.getUsername());
                 ranks.add(rank);
             }
         }
@@ -62,5 +67,25 @@ public class RankingHandler {
             ranks.get(i).setRank(i + 1);
         }
         return new Ranking("Challenge " + challengeId, ranks);
+    }
+
+    @GetMapping("/user")
+    public Ranking getRankingByUser(@RequestParam long userId) {
+        List<Rank> ranks = new ArrayList<Rank>();
+        for (Challenge challenge : challengeAccessor.findAll()) {
+            Rank rank = new Rank();
+            rank.setChallengesCompleted(completionAccessor.countByUserIDAndChallengeID(userId, challenge.getChallengeID()));
+            if (rank.getChallengesCompleted() > 0)
+            {
+                rank.setObjectID(challenge.getChallengeID());
+                rank.setObjectName(challenge.getName());
+                ranks.add(rank);
+            }
+        }
+        ranks.sort(Comparator.comparing(Rank::getChallengesCompleted));
+        for (int i = 0; i < ranks.size(); i++) {
+            ranks.get(i).setRank(i + 1);
+        }
+        return new Ranking("User " + userId, ranks);
     }
 }

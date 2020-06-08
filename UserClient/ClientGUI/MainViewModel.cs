@@ -233,12 +233,22 @@ namespace ClientGUI
             worker.RunWorkerAsync();
         }
 
-        public void GetRanking(long challengeID)
+        public void GetChallengeRanking(long challengeID)
         {
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler((sender, e) =>
             {
-                Rankings = Model.GetRanking(challengeID);
+                Rankings = Model.GetRankingByChallenge(challengeID);
+            });
+            worker.RunWorkerAsync();
+        }
+
+        public void GetUserRanking(long userID)
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler((sender, e) =>
+            {
+                Rankings = Model.GetRankingByUser(userID);
             });
             worker.RunWorkerAsync();
         }

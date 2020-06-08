@@ -52,11 +52,6 @@ namespace ClientModels.RemoteModelObjects
         }
 
 
-        public IUser GetUser(long userId) //needed?
-        {
-            throw new NotImplementedException();
-        }
-
         public List<IUser> GetUsers()
         {
             RestRequest request = new RestRequest("user/getAll");
@@ -105,19 +100,26 @@ namespace ClientModels.RemoteModelObjects
 
         public IRanking GetAllChallengeRanking()
         {
-            RestRequest request = new RestRequest("ranking/all");
-            IRestResponse response = Client.Get(request);
-            if (response.IsSuccessful)
-            {
-                return JsonConvert.DeserializeObject<RemoteRanking>(response.Content);
-            }
-            return new RemoteRanking();
+            RestRequest request = new RestRequest("ranking/allChallenges");
+            return GetRankingResponse(request);
         }
 
-        public IRanking GetRanking(long challengeID)
+        public IRanking GetRankingByChallenge(long challengeID)
         {
             RestRequest request = new RestRequest("ranking/challenge");
             request.AddParameter("challengeId", challengeID, ParameterType.GetOrPost);
+            return GetRankingResponse(request);
+        }
+
+        public IRanking GetRankingByUser(long userID)
+        {
+            RestRequest request = new RestRequest("ranking/user");
+            request.AddParameter("userId", userID, ParameterType.GetOrPost);
+            return GetRankingResponse(request);
+        }
+
+        private IRanking GetRankingResponse(RestRequest request)
+        {
             IRestResponse response = Client.Get(request);
             if (response.IsSuccessful)
             {
@@ -126,11 +128,6 @@ namespace ClientModels.RemoteModelObjects
             return new RemoteRanking();
         }
 
-
-        public IChallenge GetChallenge(long challengeId)
-        {
-            throw new NotImplementedException();
-        } //TODO: should need, as the list should be paged instead
 
         public List<IChallenge> GetChallenges()
         {

@@ -167,7 +167,7 @@ namespace ClientGUI
             }
         }
 
-        private void Get_Ranking(object sender, RoutedEventArgs e)
+        private void Get_Challenge_Ranking(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(rankingChallengeID.Text))
             {
@@ -175,11 +175,17 @@ namespace ClientGUI
             }
             else
             {
-                viewModel.GetRanking(long.Parse(rankingChallengeID.Text));
+                viewModel.GetChallengeRanking(long.Parse(rankingChallengeID.Text));
             }
         }
 
-        
+        private void Get_User_Ranking(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(rankingUserID.Text))
+            {
+                viewModel.GetUserRanking(long.Parse(rankingUserID.Text));
+            }
+        }
 
         private void TextBlock_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {

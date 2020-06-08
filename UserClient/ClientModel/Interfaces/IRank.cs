@@ -3,7 +3,8 @@
     public interface IRank
     {
         int Rank { get; }
-        IUser User { get; }
+        long ObjectID { get; }
+        string ObjectName { get; }
         int ChallengesCompleted { get; }
     }
 }
