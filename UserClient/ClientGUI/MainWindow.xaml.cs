@@ -10,15 +10,16 @@ namespace ClientGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel viewModel;
+        private MainViewModel ViewModel { get; set; }
         private double previousWidth = 800;
         private double previousHeight = 450;
 
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
+            ViewModel = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
             SetVisibility(false);
-            viewModel = DataContext as MainViewModel;
         }
 
         private void SetVisibility(bool visible)
@@ -39,15 +40,11 @@ namespace ClientGUI
             ShowActivated = visible;
         }
 
-        //TODO: consider doing by App.xaml.cs doing the login bit first
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (viewModel.RequestLogin())
+            if (ViewModel.RequestLogin())
             {
                 SetVisibility(true);
-                viewModel.RefreshChallenges(); //TODO: move into the function on the viewmodel side
-                viewModel.RefreshUsers();
-                viewModel.GetAllChallengeRanking();
             }
             else
             {
@@ -57,12 +54,12 @@ namespace ClientGUI
 
         private void Refresh_Challenges(object sender, RoutedEventArgs e)
         {
-            viewModel.RefreshChallenges();
+            ViewModel.RefreshChallenges();
         }
 
         private void Load_Challenge(object sender, RoutedEventArgs e)
         {
-            if (viewModel.LoadSelectedChallenge())
+            if (ViewModel.LoadSelectedChallenge())
             {
                 currentChallengeTab.IsSelected = true;
             }
@@ -70,12 +67,12 @@ namespace ClientGUI
 
         private void Submit_Challenge(object sender, RoutedEventArgs e)
         {
-            viewModel.SubmitChallenge((result) =>
+            ViewModel.SubmitChallenge((result) =>
             {
                 if (result)
                 {
-                    MessageBox.Show($"You have completed {viewModel.SelectedChallenge.Language} challenge {viewModel.SelectedChallenge.Name}!",
-                                    $"Completion of challenge {viewModel.SelectedChallenge.ChallengeID}",
+                    MessageBox.Show($"You have completed {ViewModel.SelectedChallenge.Language} challenge {ViewModel.SelectedChallenge.Name}!",
+                                    $"Completion of challenge {ViewModel.SelectedChallenge.ChallengeID}",
                                     MessageBoxButton.OK);
                     challengesListTab.IsSelected = true;
                 }
@@ -84,73 +81,73 @@ namespace ClientGUI
 
         private void Log_Out(object sender, RoutedEventArgs e)
         {
-            viewModel.Logout();
+            ViewModel.Logout();
             Close();
         }
 
         private void Add_Challenge(object sender, RoutedEventArgs e)
         {
-            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model); //TODO: view shouldn't know about model
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(ViewModel.Model); //TODO: view shouldn't know about model
             if (challengeEditor.ShowDialog() == true)
             {
-                viewModel.AddChallenge(challengeEditor.Challenge);
+                ViewModel.AddChallenge(challengeEditor.Challenge);
             }
         }
 
         private void Edit_Challenge(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelectedChallenge != null)
+            if (ViewModel.SelectedChallenge != null)
             { 
-                ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(viewModel.Model, viewModel.SelectedChallenge);
+                ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(ViewModel.Model, ViewModel.SelectedChallenge);
                 if (challengeEditor.ShowDialog() == true)
                 {
-                    viewModel.EditSelectedChallenge(challengeEditor.Challenge);
+                    ViewModel.EditSelectedChallenge(challengeEditor.Challenge);
                 }
             }
         }
 
         private void Delete_Challenge(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelectedChallenge != null)
+            if (ViewModel.SelectedChallenge != null)
             {
-                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete Challenge: {viewModel.SelectedChallenge.Name}", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete Challenge: {ViewModel.SelectedChallenge.Name}", MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    viewModel.DeleteSelectedChallenge();
+                    ViewModel.DeleteSelectedChallenge();
                 }
             }
         }
 
         private void Refresh_Users(object sender, RoutedEventArgs e)
         {
-            viewModel.RefreshUsers();
+            ViewModel.RefreshUsers();
         }
 
         private void Add_User(object sender, RoutedEventArgs e)
         {
-            UserEditorDialog userEditor = new UserEditorDialog(viewModel.Model); //TODO: view shouldn't know about model
+            UserEditorDialog userEditor = new UserEditorDialog(ViewModel.Model);
             if (userEditor.ShowDialog() == true)
             {
-                viewModel.AddUser(userEditor.User, userEditor.NewPassword);
+                ViewModel.AddUser(userEditor.User, userEditor.NewPassword);
             }
         }
 
         private void Edit_User(object sender, RoutedEventArgs e)
         {
-            UserEditorDialog userEditor = new UserEditorDialog(viewModel.Model, viewModel.SelectedUser); //TODO: view shouldn't know about model
+            UserEditorDialog userEditor = new UserEditorDialog(ViewModel.Model, ViewModel.SelectedUser);
             if (userEditor.ShowDialog() == true)
             {
                 IUser user = userEditor.User;
                 switch (userEditor.EditedField)
                 {
                     case UserEditorDialog.UserField.NAME:
-                        viewModel.SaveUserName(user.UserID, user.Username);
+                        ViewModel.SaveUserName(user.UserID, user.Username);
                         break;
                     case UserEditorDialog.UserField.PASS:
-                        viewModel.SaveUserPass(user.UserID, userEditor.NewPassword);
+                        ViewModel.SaveUserPass(user.UserID, userEditor.NewPassword);
                         break;
                     case UserEditorDialog.UserField.TYPE:
-                        viewModel.SaveUserType(user.UserID, user.UserType);
+                        ViewModel.SaveUserType(user.UserID, user.UserType);
                         break;
                 }
             }
@@ -158,12 +155,12 @@ namespace ClientGUI
 
         private void Delete_User(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelectedUser != null)
+            if (ViewModel.SelectedUser != null)
             {
-                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete User: {viewModel.SelectedUser.Username}", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", $"Delete User: {ViewModel.SelectedUser.Username}", MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    viewModel.DeleteSelectedUser();
+                    ViewModel.DeleteSelectedUser();
                 }
             }
         }
@@ -172,11 +169,11 @@ namespace ClientGUI
         {
             if (string.IsNullOrEmpty(rankingChallengeID.Text))
             {
-                viewModel.GetAllChallengeRanking();
+                ViewModel.GetAllChallengeRanking();
             }
             else
             {
-                viewModel.GetChallengeRanking(long.Parse(rankingChallengeID.Text));
+                ViewModel.GetChallengeRanking(long.Parse(rankingChallengeID.Text));
             }
         }
 
@@ -184,7 +181,7 @@ namespace ClientGUI
         {
             if (!string.IsNullOrEmpty(rankingUserID.Text))
             {
-                viewModel.GetUserRanking(long.Parse(rankingUserID.Text));
+                ViewModel.GetUserRanking(long.Parse(rankingUserID.Text));
             }
         }
 

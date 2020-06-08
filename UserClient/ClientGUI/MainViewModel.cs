@@ -1,6 +1,5 @@
 ﻿using ClientModels;
 using ClientModels.Interfaces;
-using ClientModels.RemoteModelObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,10 +24,9 @@ namespace ClientGUI
         public IUser User { get => user; set => SetProperty(ref user, value); }
         public string UserCode { get => userCode; set => SetProperty(ref userCode, value); }
         public string ChallengeStatus { get => challengeStatus; set => SetProperty(ref challengeStatus, value); }
-        public IModel Model { get; private set; } = new RemoteModel("http://localhost:59876/");//TODO: pass in from App
+        public IModel Model { get; private set; }
         public IChallenge CurrentChallenge { get => currentChallenge; private set => SetProperty(ref currentChallenge, value); }
         public bool AdminToolsEnabled { get => adminToolsEnabled; private set => SetProperty(ref adminToolsEnabled, value); }
-        public bool EditingUser { get; private set; }
         public List<IChallenge> ChallengeList { get => challengeList; private set => SetProperty(ref challengeList, value); }
         public List<IUser> UserList { get => userList; private set => SetProperty(ref userList, value); }
         public IChallenge SelectedChallenge
@@ -42,15 +40,9 @@ namespace ClientGUI
         public IUser SelectedUser { get; set; }
         public string ChallengeDesc { get => challengeDesc; private set => SetProperty(ref challengeDesc, value); }
         public string UserState { get => userState; private set => SetProperty(ref userState, value); }
-        public string NewPassword { get; set; }
         public IRanking Rankings { get => rankings; set => SetProperty(ref rankings, value); }
 
-        public MainViewModel()
-        {
-            ChallengeList = new List<IChallenge>();
-            CurrentChallenge = Model.NewChallengeInstance();
-            AdminToolsEnabled = true;
-        }
+        public MainViewModel(IModel model) => Model = model;
 
         public bool RequestLogin()
         {
@@ -59,15 +51,15 @@ namespace ClientGUI
             {
                 User = loginWindow.User;
                 AdminToolsEnabled = User.UserType == UserType.ADMIN;
+                RefreshChallenges();
+                RefreshUsers();
+                GetAllChallengeRanking();
                 return true;
             }
             return false;
         }
 
-        public void Logout()
-        {
-            Model.Logout();
-        }
+        public void Logout() => Model.Logout();
 
         public bool LoadSelectedChallenge()
         {

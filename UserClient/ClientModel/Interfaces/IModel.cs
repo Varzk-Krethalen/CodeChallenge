@@ -1,5 +1,4 @@
-﻿using ClientModels.RemoteModelObjects;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClientModels.Interfaces
 {
