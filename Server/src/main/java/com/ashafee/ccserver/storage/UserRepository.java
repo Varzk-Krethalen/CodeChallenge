@@ -6,5 +6,5 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface UserRepository extends GenericRepository<User> {
-
+    User findByUsername(String username);
 }

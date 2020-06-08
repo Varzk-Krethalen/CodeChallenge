@@ -1,11 +1,9 @@
 package com.ashafee.ccserver.handler;
 
-import com.ashafee.ccserver.storage.GenericRepository;
 import com.ashafee.ccserver.storage.UserRepository;
 import com.ashafee.ccserver.user.User;
 import com.ashafee.ccserver.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
