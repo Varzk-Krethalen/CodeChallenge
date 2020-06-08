@@ -1,6 +1,7 @@
 package com.ashafee.ccserver.handler;
 
 import com.ashafee.ccserver.storage.GenericRepository;
+import com.ashafee.ccserver.storage.UserRepository;
 import com.ashafee.ccserver.user.User;
 import com.ashafee.ccserver.user.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
 @RestController @RequestMapping("/user") @Transactional
 public class UserHandler {
     @Autowired
-    GenericRepository<User> userAccessor;
+    UserRepository userAccessor;
 
     @GetMapping("/getAll")
     public List<User> getUsers() {

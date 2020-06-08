@@ -1,18 +1,16 @@
 package com.ashafee.ccserver.ranking;
 
+import com.ashafee.ccserver.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data @AllArgsConstructor
 public class Ranking {
-    private long rankingID;         //move id/name/desc into a LeaderBoard table. This should be composite.
     private String rankingName;
-    private String rankingDesc;
-//    @ManyToOne @JoinColumn(name = "userID")
-//    private User userID;
-    private int userScore;
+    private List<Rank> ranks;
 }
-//TODO: Replace with a calculation
+
