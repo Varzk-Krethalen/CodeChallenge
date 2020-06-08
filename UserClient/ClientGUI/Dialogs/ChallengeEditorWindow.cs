@@ -8,7 +8,7 @@ namespace ClientGUI
     /// Interaction logic for ChallengeEditor.xaml
     /// </summary>
     public partial class ChallengeEditorDialog : Window
-    { //TODO: consider using a viewmodel for proper mvvm. Can have proper listview binding then.
+    {
         private IModel Model { get; }
         public IChallenge Challenge { get; }
         public bool IsNewChallenge { get; } = true;

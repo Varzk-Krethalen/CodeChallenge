@@ -90,7 +90,7 @@ namespace ClientGUI
 
         private void Add_Challenge(object sender, RoutedEventArgs e)
         {
-            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(ViewModel.Model); //TODO: view shouldn't know about model
+            ChallengeEditorDialog challengeEditor = new ChallengeEditorDialog(ViewModel.Model);
             if (challengeEditor.ShowDialog() == true)
             {
                 ViewModel.AddChallenge(challengeEditor.Challenge);

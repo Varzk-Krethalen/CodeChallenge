@@ -14,6 +14,6 @@ namespace ClientModels.RemoteModelObjects
         {
             ChallengeId = challengeId;
             ChallengeCode = challengeCode;
-        }//TODO: Add user id, so server knows who it is
+        }
     }
 }
