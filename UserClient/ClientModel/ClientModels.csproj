@@ -48,15 +48,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Challenge.cs" />
-    <Compile Include="ChallengeResult.cs" />
-    <Compile Include="IChallenge.cs" />
-    <Compile Include="IChallengeResult.cs" />
-    <Compile Include="IModel.cs" />
+    <Compile Include="Interfaces\IRank.cs" />
+    <Compile Include="Interfaces\IRanking.cs" />
+    <Compile Include="Interfaces\IUser.cs" />
+    <Compile Include="RemoteModel\RemoteChallenge.cs" />
+    <Compile Include="RemoteModel\RemoteChallengeResult.cs" />
+    <Compile Include="RemoteModel\RemoteChallengeSubmission.cs" />
+    <Compile Include="Interfaces\IChallenge.cs" />
+    <Compile Include="Interfaces\IChallengeResult.cs" />
+    <Compile Include="Interfaces\IModel.cs" />
+    <Compile Include="Interfaces\ITest.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ranking.cs" />
-    <Compile Include="RemoteModel.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="RemoteModel\RemoteRank.cs" />
+    <Compile Include="RemoteModel\RemoteRanking.cs" />
+    <Compile Include="RemoteModel\RemoteModel.cs" />
+    <Compile Include="RemoteModel\RemoteTest.cs" />
+    <Compile Include="RemoteModel\JsonConcreteConverter.cs" />
+    <Compile Include="RemoteModel\RemoteUser.cs" />
+    <Compile Include="UserType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

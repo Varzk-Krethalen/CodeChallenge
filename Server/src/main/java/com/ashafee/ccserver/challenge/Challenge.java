@@ -1,12 +1,12 @@
 package com.ashafee.ccserver.challenge;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity @Data @NoArgsConstructor
 public class Challenge {
@@ -14,8 +14,10 @@ public class Challenge {
     private long challengeID;
     private String name;
     private Language language;
+    @Column(length = 2000)
     private String initialCode;
-//    private Date modifiedDate;
-//    private String author;
-
-}
+    private String description;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "challengeID") //extend by instead referencing a list of challenge-test from another table
+    private Set<ChallengeTest> tests = new HashSet<>(); //that is, challenge independent tests
+}   //Extension: last modified date, author

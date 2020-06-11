@@ -1,4 +1,4 @@
-﻿namespace ClientModels
+﻿namespace ClientModels.Interfaces
 {
     public interface IChallengeResult
     {

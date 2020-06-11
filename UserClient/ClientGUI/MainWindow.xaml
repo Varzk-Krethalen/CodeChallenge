@@ -5,17 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientGUI"
         mc:Ignorable="d"
-        Title="CodeChallengeClient" Height="450" Width="800">
-    <Window.DataContext>
-        <local:MainViewModel/>
-    </Window.DataContext>
+        Title="Code Challenge Client" Loaded="Window_Loaded" Height="450" Width="800">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
     <Grid>
-        <Button Content="Log Out" HorizontalAlignment="Right" Margin="0,1,2,0" VerticalAlignment="Top" Width="104" Click="Log_Out"/>
-        <TextBlock x:Name="textblock" Text="{Binding UserName}" Width="auto" FontSize="14" HorizontalAlignment="Right" Margin="0,1,108,0" VerticalAlignment="Top" />
-        <!--click on name should bring to settings?--> 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,1,2,0" Panel.ZIndex="1">
+            <TextBlock Text="{Binding User.UserType}" FontSize="14"/>
+            <TextBlock Text=" " FontSize="14"/>
+            <TextBlock Text="{Binding User.UserID}" FontSize="14"/>
+            <TextBlock Text=", " FontSize="14"/>
+            <TextBlock Text="{Binding User.Username}" Margin="0,0,10,0" FontSize="14" />
+            <Button Content="Log Out" Margin="1,1,1,1" Width="104" Click="Log_Out"/>
+        </StackPanel>
+
         <TabControl x:Name="tabControl">
             <TabItem Header="Challenges" Name="challengesListTab">
                 <Grid>
@@ -27,80 +33,137 @@
                         <RowDefinition Height="9*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2"><!--Add a gridsplitter bit-->
-                        <ListView.Style>
-                            <Style TargetType="{x:Type ListView}">
-                                <Setter Property="Grid.ColumnSpan" Value="2" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.AdminToolsEnabled}" Value="False">
-                                        <Setter Property="Grid.ColumnSpan" Value="1" />
-                                    </DataTrigger>
-                                </Style.Triggers>
+                    <ListView Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Path=ChallengeList}" SelectedItem="{Binding Path=SelectedChallenge}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
                             </Style>
-                        </ListView.Style>
+                        </ListView.Resources>
                         <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Id"/>
-                                <GridViewColumn Header="Challenge"/>
-                                <GridViewColumn Header="Language"/>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="Challenge" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding ChallengeID}"/>
+                                <GridViewColumn Header="Language" DisplayMemberBinding="{Binding Language}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <TextBlock Text="Challenges go here: id, name, lang, desc, preview" Grid.Row="0" Grid.Column="1"/>
-                    <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,0,0,0" Grid.Row="1" Grid.Column="0" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
-                    <Button Content="Edit Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="1" Grid.Column="1" Click="Edit_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
-                    <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Click="Load_Challenge"/>
-                    <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Grid.Row="1" Grid.Column="1" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    <TextBlock Text="{Binding ChallengeDesc}" Grid.Row="0" Grid.Column="1"/>
+                    <UniformGrid Grid.Row="1" Grid.Column="0" Rows="1">
+                        <Button x:Name="challengeRefresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Challenges"/>
+                        <Button Content="Add Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Add_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    </UniformGrid>
+                    <UniformGrid Grid.Row="1" Grid.Column="2" Rows="1">
+                        <Button Content="Edit Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Click="Edit_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                        <Button Content="Load Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Load_Challenge"/>
+                        <Button Content="Delete Challenge" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Click="Delete_Challenge" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}"/>
+                    </UniformGrid>
                     <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
-                    <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,1,1,1"/>
                     <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0"/>
                     <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0,1,1,1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Current Challenge" x:Name="currentChallengeTab">
-                <Grid ShowGridLines="True"><!--will need border per cell, or at least for some-->
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="8*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="challengeTitle" Text="Id - Language - Name" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
-                    <TextBlock x:Name="challengeDesc" Text="Need a description" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
-                    <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Click="Submit_Challenge"/>
-                    <TextBox x:Name="challengeCodeBox" Text="{Binding ChallengeCode}" Height="auto" Width="auto" FontSize="20" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" FontSize="20" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="challengeTitle" Text="{Binding CurrentChallenge.Name}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0"/>
+                        <TextBlock x:Name="challengeDesc" Text="{Binding CurrentChallenge.Description}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
+                        <ListView x:Name="testList" ItemsSource="{Binding CurrentChallenge.Tests}" Width="auto" Grid.Row="2">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Inputs">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding InputArgs}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Expected Output">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ExpectedOutput}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button Content="Submit Challenge" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Click="Submit_Challenge"/>
+                        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,1"/>
+                    </Grid> <!--list the tests under description?-->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="8*"/> <!--add splitter--> 
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <local:CustomTextBox x:Name="challengeCodeBox" Text="{Binding UserCode}" FontSize="20" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <TextBox x:Name="challengeStatusBlock" Text="{Binding ChallengeStatus}" FontSize="20" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="Wrap" IsReadOnly="True"/>
+                    </Grid>
+                    <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1"/>
+                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,1,1,1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="User Ranking">
-                retrieve generated ranking list. Just center it.
-                list of ranked users - top 20? In second pane, do what?
-                or just single pane?
-                description of ranking? options to narrow (e.g. by challenge id)
-            </TabItem>
-            <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
-                <!--add/remove/edit users-->
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="9*"/>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2">
-                        <!--Add a gridsplitter bit-->
+                    <TextBlock Text="{Binding Rankings.RankingName}"/>
+                    <ListView ItemsSource="{Binding Path=Rankings.Ranks}" Grid.Row="1">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="User"/>
-                                <GridViewColumn Header="Type"/>
+                                <GridViewColumn Header="Rank" DisplayMemberBinding="{Binding Rank}"/>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ObjectID}"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ObjectName}"/>
+                                <GridViewColumn Header="Challenges Completed" DisplayMemberBinding="{Binding ChallengesCompleted}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <UniformGrid Grid.Row="2" Columns="3">
+                        <TextBlock Text="Rank by Challenge ID - leave blank for all challenges"  TextWrapping="WrapWithOverflow" PreviewTextInput="TextBlock_PreviewTextInput"/>
+                        <TextBox x:Name="rankingChallengeID" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        <Button Content="Get Ranking" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Click="Get_Challenge_Ranking"/>
+                        <TextBlock Text="Rank by User ID"  TextWrapping="WrapWithOverflow" PreviewTextInput="TextBlock_PreviewTextInput"/>
+                        <TextBox x:Name="rankingUserID" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        <Button Content="Get Ranking" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Click="Get_User_Ranking"/>
+                    </UniformGrid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="userManagement" Header="User Management" Visibility="{Binding Path=AdminToolsEnabled, Converter={StaticResource BoolToVisConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ListView ItemsSource="{Binding Path=UserList}" SelectedItem="{Binding Path=SelectedUser}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True" Grid.Row="0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="UserId" DisplayMemberBinding="{Binding UserID}"/>
+                                <GridViewColumn Header="Username" DisplayMemberBinding="{Binding Username}"/>
+                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding UserType}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <UniformGrid Grid.Row="1" Rows="1">
+                        <Button x:Name="userRefresh" Content="Refresh List" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Refresh_Users"/>
+                        <Button Content="Add User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Add_User"/>
+                        <Button Content="Edit User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Edit_User"/>
+                        <Button Content="Delete User" Height="23" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Delete_User"/>
+                    </UniformGrid>
+                    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,1"/>
+                    <TextBlock Text="{Binding UserState}"  Grid.Row="2"/>
                 </Grid>
             </TabItem>
         </TabControl>

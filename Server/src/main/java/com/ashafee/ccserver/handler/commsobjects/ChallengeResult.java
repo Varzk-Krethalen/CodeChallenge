@@ -1,4 +1,4 @@
-package com.ashafee.ccserver.challenge;
+package com.ashafee.ccserver.handler.commsobjects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

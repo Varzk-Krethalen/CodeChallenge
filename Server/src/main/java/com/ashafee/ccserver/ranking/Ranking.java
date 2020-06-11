@@ -1,18 +1,16 @@
 package com.ashafee.ccserver.ranking;
 
+import com.ashafee.ccserver.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity @Data @NoArgsConstructor
+@Data @AllArgsConstructor
 public class Ranking {
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
-    private long rankingID;         //move id/name/desc into a LeaderBoard table. This should be composite.
     private String rankingName;
-    private String rankingDesc;
-//    @ManyToOne @JoinColumn(name = "userID")
-//    private User userID;
-    private int userScore;
+    private List<Rank> ranks;
 }
-//Replace with a calculation?
+

@@ -5,27 +5,25 @@ import com.ashafee.ccserver.challenge.ChallengeRunner;
 
 
 public class JavaChallengeRunner implements ChallengeRunner {
-    private String result;
+    private String output;
+    private String challengeBuildDir = "target/classes/challengebuilds";
+    private String challengeClassName = "Challenge";
 
     @Override
-    public Boolean validateChallenge(Challenge challenge) {
-
-        StringBuilder sb = new StringBuilder(64);
-        sb.append("public class Challenge {\n");
-        sb.append("    public static void main(String[] args) {\n");
-        sb.append("        System.out.println(\"Hello world\");\n");
-        sb.append("    }\n");
-        sb.append("}\n");
-
-        Compiler compiler = new Compiler();
-        result = compiler.compile(sb.toString());
-        result = compiler.getLastOutput();
-        return true;
+    public Boolean challengeCodeValid(Challenge challenge, String code) {
+        try (JavaCompiler compiler = new JavaCompiler(challengeBuildDir, challengeClassName)) {
+            Boolean result = false;
+            if (compiler.compile(code)) {
+                result = compiler.runTests(challenge.getTests());
+            }
+            output = compiler.getLastOutput();
+            return result;
+        }
     }
 
     @Override
-    public String getlastOutput() {
-        return result;
+    public String lastOutput() {
+        return output;
     }
 }
 
